@@ -1,0 +1,47 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
+image
+{
+    width: 100%;
+}
+a
+{
+    text-decoration: none;
+    color: black;
+}
+ul
+{
+    list-style: none;
+}
+
+  
+.container
+{
+    box-sizing: border-box;
+    max-width: 1540px;
+    padding: 50px 50px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.048);
+    border-radius: 18px;
+}
+
+
+.sectionTitle
+{
+    font-size: 44px;
+    margin-bottom: 50px;
+}
+.section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 80px;
+    box-sizing: border-box;
+    scroll-snap-align: start;
+}
