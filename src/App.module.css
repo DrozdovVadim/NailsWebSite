@@ -5,7 +5,7 @@
 }
 image
 {
-    width: 100%;
+    max-width: 100%;
 }
 a
 {
@@ -22,8 +22,8 @@ ul
 {
     box-sizing: border-box;
     max-width: 1540px;
-    padding: 50px 50px;
-    width: 100%;
+    padding: 50px 80px;
+    width: 90%;
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;

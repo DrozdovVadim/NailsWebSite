@@ -1,4 +1,27 @@
 .aboutMeContainer
 {
-    background-color: black;
+    background: -webkit-linear-gradient(135deg, #F94E4E,#FFA99D,#FFC870); 
+    background: linear-gradient(135deg, #F94E4E,#FFA99D,#FFC870);                                             
+    flex-direction: column;                                           
+}
+.aboutMeContent
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+.aboutMeImg
+{
+    max-width: 500px;
+    box-sizing: border-box;
+    border: 8px solid white;
+    border-radius: 12px;
+}
+.aboutMeText
+{
+    max-width: 500px;
+    font-size: 28px;
+    align-self: center;
+    color:white;
 }
