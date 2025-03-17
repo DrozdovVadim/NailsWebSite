@@ -1,0 +1,78 @@
+.contactsContainer
+{
+    background: -webkit-linear-gradient(43deg, #7690d5,#be7d94);
+    background: linear-gradient(43deg, #7690d5,#be7d94); 
+    flex-direction: row;   
+    justify-content: space-between;                                                                                  
+}
+.contactsText
+{
+    max-width: 900px;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.contactsTitle
+{
+    margin-bottom: 70px;
+    
+}
+.contactsImg
+{
+    width: 400px;
+    box-sizing: border-box;
+    border: 8px solid white;
+    border-radius: 12px;
+}
+.linksWrapper
+{
+    
+    background-color: white;
+    width: 700px;
+    box-sizing: border-box;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+.linksWrapperItem
+{
+    display: flex;
+    
+}
+.linksWrapperItem>div
+{
+    width: 160px;
+    font-size: 24px;
+    margin-right: 40px;
+}
+.linksWrapperItem>a
+{
+    position: relative;
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.685);
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+}
+.linksWrapperItem>a::before
+{
+    position: absolute;
+    content: "";
+    width: 0px;
+    background-color: rgba(245, 56, 50, 0.212);
+    border-radius: 12px;
+    left: 50%;
+    height: 3px;
+    transition: width 0.4s, left 0.4s;
+    transform: translateX(-50%);
+    top: 100%;
+    
+}
+.linksWrapperItem>a:hover::before
+{
+    width: 100%;
+}

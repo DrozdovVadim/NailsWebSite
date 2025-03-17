@@ -3,9 +3,10 @@
     margin: 0;
     padding: 0;
 }
-image
+img
 {
     max-width: 100%;
+    box-shadow: 1px 1px 30px rgb(119, 117, 117);
 }
 a
 {
@@ -36,6 +37,7 @@ ul
 {
     font-size: 44px;
     margin-bottom: 50px;
+    color: white;
 }
 .section {
     display: flex;

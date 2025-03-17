@@ -14,9 +14,11 @@
 .aboutMeImg
 {
     max-width: 500px;
+    max-height: 500px;
     box-sizing: border-box;
     border: 8px solid white;
     border-radius: 12px;
+    box-shadow: none;
 }
 .aboutMeText
 {
@@ -24,4 +26,14 @@
     font-size: 28px;
     align-self: center;
     color:white;
+}
+.swiper
+{
+    width: 500px !important;
+    margin: 0 !important;
+
+}
+.swiperSlide
+{
+    width: auto !important;
 }

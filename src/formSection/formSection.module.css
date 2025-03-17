@@ -2,7 +2,8 @@
 {
     flex-direction: column;
     flex-direction: column;
-    background-color: rgb(221, 251, 253);
+    background: -webkit-linear-gradient(135deg, #B0CCFF,#E2E2E2,#BDD4FF);
+    background: linear-gradient(135deg, #B0CCFF,#E2E2E2,#BDD4FF);    
     justify-content: space-between;
     box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.048);
     border-radius: 18px;
@@ -25,6 +26,7 @@
     height: 400px;
     max-width: 300px;
     box-sizing: border-box;
+    padding-top: 60px;
 }
 .form>input
 {
@@ -42,8 +44,10 @@
     border: 8px solid rgba(112, 183, 216, 0.507);
     box-shadow: 1px 1px 30px rgb(119, 117, 117);
     border-radius: 12px;
+
 }
 .formBtn
 {
     background-color: rgba(165, 127, 255, 0.705) !important;
+    margin-top: auto;
 }

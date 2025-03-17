@@ -21,6 +21,7 @@
 .headerContainer>img
 {
     height: 60px;
+    box-shadow: none;
 }
 .headerContainer>nav
 {

@@ -1,0 +1,12 @@
+.map
+{
+    border-radius: 12px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.mapContainer
+{
+    background: -webkit-linear-gradient(135deg, #e27096,#be71ca,#2594ed,#81d582);
+    background: linear-gradient(135deg, #e27096,#be71ca,#2594ed,#81d582);                                      
+}

@@ -5,6 +5,8 @@ import Gallery from './gallery/Gallery';
 import FormSection from './formSection/FormSection';
 import AboutMe from './aboutMe/aboutMe';
 import Contacts from './contacts/Contacts';
+import Map from './map/Map';
+import Footer from './footer/Footer';
 
 
 const App = () => {
@@ -16,6 +18,8 @@ const App = () => {
         <FormSection/>
         <AboutMe/>
         <Contacts/>
+        <Map/>
+        <Footer/>
     </div>
   );
 };

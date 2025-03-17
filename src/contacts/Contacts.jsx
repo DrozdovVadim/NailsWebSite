@@ -3,36 +3,59 @@ import generalStyle from "../App.module.css";
 import style from "./Contacts.module.css"
 import contactsImg from "../images/contactsImg.png"
 
+const data=[
+    {
+        id:1,
+        text: 'Телефон',
+        link: 'tel:89999999999',
+        linkText: '8 (999) 999 99-99',
+    },
+    {
+        id:2,
+        text: 'Telegram',
+        link: 'https://telegram.org',
+        linkText: 'https://telegram.org',
+    },
+    {
+        id:3,
+        text: 'VK',
+        link: 'https://vk.com',
+        linkText: 'https://vk.com',
+    },
+    {
+        id:4,
+        text: 'Instagram',
+        link: 'https://instagram.com/ktrdrzd',
+        linkText: 'https://instagram.com/ktrdrzd',
+    },
+    {
+        id:5,
+        text: 'Галерея работ',
+        link: 'https://instagram.com/ktrdrzd',
+        linkText: 'https://instagram.com/ktrdrzd',
+    },
+]
+
 function Contacts() {
     return(
         <div className={generalStyle.section+ " "+ style.ContactsSection}>
             <div className={generalStyle.container+ " "+ style.contactsContainer}>
                 <div className={style.contactsText}>
-                    <h2 className={generalStyle.sectionTitle}>Контакты</h2>
+                    <h2 className={generalStyle.sectionTitle+ " "+ style.contactsTitle}>Контакты</h2>
                     <div className={style.linksWrapper}>
-                        <div className={style.linksWrapperItem}>
-                            <div>Телефон</div>
-                            <a href="tel:89999999999">8 (9999) 999 99-99</a>
-                        </div>
-                        <div className={style.linksWrapperItem}>
-                            <div>Telegram</div>
-                            <a href="https://telegram.org">telegram.org</a>
-                        </div>
-                        <div className={style.linksWrapperItem}>
-                            <div>VK</div>
-                            <a href="https://vk.com">VK</a>
-                        </div>
-                        <div className={style.linksWrapperItem}>
-                            <div>Instagram</div>
-                            <a href="https://instagram.com/ktrdrzd">instagram.com/ktrdrzd</a>
-                        </div>
-                        <div className={style.linksWrapperItem}>
-                            <div>Галерея работ</div>
-                            <a href="https://instagram.com/ktrdrzd">instagram.com/ktrdrzd</a>
-                        </div>
+                        {
+                            data.map(item => {
+                                return(
+                                    <div className={style.linksWrapperItem} key={item.id}>
+                                        <div>{item.text}</div>
+                                        <a href={item.link}>{item.linkText}</a>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
-                    <img src={contactsImg} alt="photo" />
                 </div>
+                <img src={contactsImg} className={style.contactsImg} alt="photo" />
             </div>
         </div>
     )
