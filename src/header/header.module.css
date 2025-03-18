@@ -34,5 +34,25 @@
     flex-direction: row;
     flex-wrap: wrap;
     gap: 25px;
-    font-size: 18px;
+
+}
+.headerListItem
+{
+    position: relative;
+}
+.headerListItem::before
+{
+    position: absolute;
+    height: 2px;
+    content: "";
+    top:100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(245, 56, 50, 0.295);
+    width: 0;
+    transition: 0.3s;
+}
+.headerListItem:hover::before
+{
+    width: 100%;
 }

@@ -36,7 +36,7 @@ const data=[
 function Gallery()
 {
     return(
-        <div className={generalStyle.section + " "+ style.gallerySection}>
+        <div id="title1" className={generalStyle.section + " "+ style.gallerySection}>
             <div className={generalStyle.container+ " "+ style.galleryContainer}>
                 <h2 className={generalStyle.sectionTitle}>Галерея моих работ</h2>
                 <Swiper className={style.imgWrapper}

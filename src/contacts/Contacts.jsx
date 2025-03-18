@@ -38,7 +38,7 @@ const data=[
 
 function Contacts() {
     return(
-        <div className={generalStyle.section+ " "+ style.ContactsSection}>
+        <div id="title4" className={generalStyle.section+ " "+ style.ContactsSection}>
             <div className={generalStyle.container+ " "+ style.contactsContainer}>
                 <div className={style.contactsText}>
                     <h2 className={generalStyle.sectionTitle+ " "+ style.contactsTitle}>Контакты</h2>

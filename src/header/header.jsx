@@ -44,7 +44,7 @@ function Header() {
                             navData.map((item) => {
                                 return (
                                     <li className={style.headerListItem} key={item.id}>
-                                        <a href="#">{item.name}</a>
+                                        <a href={"#title"+item.id}>{item.name}</a>
                                     </li>
                                 )
                             })

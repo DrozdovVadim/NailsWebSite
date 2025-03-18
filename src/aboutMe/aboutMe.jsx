@@ -33,7 +33,7 @@ const data = [
 function AboutMe()
 {
     return(
-        <div className={generalStyle.section+ " "+ style.aboutMeSection}>
+        <div id="title2" className={generalStyle.section+ " "+ style.aboutMeSection}>
             <div className={generalStyle.container+ " "+style.aboutMeContainer}>
                 <h2 className={generalStyle.sectionTitle}>Пару слов о себе</h2>
                 <div className={style.aboutMeContent}>

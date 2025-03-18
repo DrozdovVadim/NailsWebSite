@@ -27,6 +27,7 @@
     max-width: 300px;
     box-sizing: border-box;
     padding-top: 60px;
+    box-shadow: 3px 2px 20px rgb(119 117 117 / 58%);
 }
 .form>input
 {
@@ -44,6 +45,7 @@
     border: 8px solid rgba(112, 183, 216, 0.507);
     box-shadow: 1px 1px 30px rgb(119, 117, 117);
     border-radius: 12px;
+    margin-top: -50px;
 
 }
 .formBtn
