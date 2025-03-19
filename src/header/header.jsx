@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "../images/logo.svg";
 import nails from "../images/nailsbanner.png";
-
+import Profile from "../profile/Profile";
 import generalStyle from "../App.module.css"
 import style from "./header.module.css"
 
@@ -32,6 +32,13 @@ const navData=[
     },
 ]
 
+function showProfile() {
+    const profile = document.getElementById("profile");
+    if (profile) {
+        profile.classList.toggle(generalStyle.showProfile);
+    }
+}
+
 
 function Header() {
     return (
@@ -41,17 +48,24 @@ function Header() {
                 <nav>
                     <ul className={style.headerNavList}>
                         {
-                            navData.map((item) => {
+                            navData.map((item, index) => {
+                                const isLastItem = index === navData.length - 1;
                                 return (
                                     <li className={style.headerListItem} key={item.id}>
-                                        <a href={"#title"+item.id}>{item.name}</a>
+                                        <a 
+                                            href={"#title" + item.id}
+                                            onClick={isLastItem ? () => showProfile() : null}
+                                        >
+                                            {item.name}
+                                        </a>
                                     </li>
-                                )
+                                );
                             })
                         }
                     </ul>
                 </nav>
             </div>
+            <Profile/>
         </header>
     );
 }

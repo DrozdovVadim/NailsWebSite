@@ -54,3 +54,7 @@ ul
     color: white;
     text-shadow: 1px 1px 30px rgb(119, 117, 117);
 }
+.showProfile
+{
+    opacity: 1 !important;
+}
