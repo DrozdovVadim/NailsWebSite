@@ -14,12 +14,12 @@ const App = () => {
     <div >
         <Header/>
         <Banner/>
-        <Gallery/>
-        <FormSection/>
+         <Gallery/>
+        {/*<FormSection/>
         <AboutMe/>
         <Contacts/>
         <Map/>
-        <Footer/>
+        <Footer/> */}
     </div>
   );
 };

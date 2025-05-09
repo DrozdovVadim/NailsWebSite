@@ -4,7 +4,7 @@ import nails from "../images/nailsbanner.png";
 import Profile from "../profile/Profile";
 import generalStyle from "../App.module.css"
 import style from "./header.module.css"
-
+import menuIcon from "../images/menu-icon.svg"
 const navData=[
     {
         id:1,
@@ -39,13 +39,21 @@ function showProfile() {
     }
 }
 
+const  showMenu = () => 
+{
+    const menu = document.getElementById("nav");
+    if (menu)
+    {
+        menu.classList.toggle(style.showMenu)
+    }
+}
 
 function Header() {
     return (
         <header className={style.header} >
             <div className={generalStyle.container +" "+ style.headerContainer}>
                 <img src={logo} alt="logo" />
-                <nav>
+                <nav id="nav">
                     <ul className={style.headerNavList}>
                         {
                             navData.map((item, index) => {
@@ -64,6 +72,7 @@ function Header() {
                         }
                     </ul>
                 </nav>
+                <img onClick={()=> showMenu()} className={style.menuIcon} src={menuIcon} alt="icon" />
             </div>
             <Profile/>
         </header>

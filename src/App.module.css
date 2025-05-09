@@ -56,5 +56,28 @@ ul
 }
 .showProfile
 {
+    display: grid !important;
     opacity: 1 !important;
+}
+
+@media(max-width: 1024px)
+{
+    .sectionTitle
+    {
+        font-size: 34px;
+    }
+}
+@media(max-width: 670px)
+{
+    .container
+    {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .sectionTitle
+    {
+        font-size: 28px;
+        text-align: center;
+    }
+    
 }

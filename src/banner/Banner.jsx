@@ -10,7 +10,7 @@ function Banner() {
       <div className={generalStyle.container + " " + style.bannerContainer}>
       
         <div className={style.bannerText}>
-          <h2 className={generalStyle.sectionTitle}>Выбирай Яркие дизайны</h2>
+          <h2 className={generalStyle.sectionTitle +" "+style.bannerTitle}>Выбирай Яркие дизайны</h2>
           <p className={style.bannerParagraph + " "+ style.firstP}>
             Привет, я Катя, и я специалист ногтевого сервиса. Со мной клиент
             всегда уверен в идеальном исполнении своих желаний! 💅✨

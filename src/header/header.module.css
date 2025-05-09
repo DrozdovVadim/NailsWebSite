@@ -56,3 +56,41 @@
 {
     width: 100%;
 }
+.menuIcon
+{
+    display: none;
+    width: 30px;
+}
+.showMenu
+{
+    display: flex !important;
+}
+@media (max-width: 768px)
+{
+
+    .menuIcon
+    {
+        display: block;
+    }
+    .headerContainer>nav
+    {
+        background-color: antiquewhite;
+        padding: 30px;
+        border-radius: 14px;
+        z-index: 2;
+        display: none;
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+    }
+    .headerNavList
+    {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .headerListItem
+    {
+        width: fit-content;
+    }
+}

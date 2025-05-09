@@ -1,6 +1,6 @@
 .profileContainer
 {
-    display: grid;
+    display: none;
     opacity: 0;
     position: fixed;
     top: 50%;
@@ -9,12 +9,13 @@
     transition: 0.4s;
     background-color: white;
     max-width: 1000px;
+    max-height: 800px;
     width: 70%;
     grid-template-columns: 1fr 2fr;
     grid-template-rows: 1fr 0.5fr 0.5fr;
     grid-template-areas: 
-    "profileImg profileDescription"
-    "profileInfo profileDescription";
+    "profileImg profileHystory"
+    "profileInfo profileHystory";
     row-gap: 30px;
     column-gap: 50px;
     box-shadow: 3px 2px 20px rgba(119, 117, 117, 0.788);
@@ -30,13 +31,38 @@
 {
     grid-area: profileInfo;
 }
-.profileDescription
+.profileHystory
 {
-    grid-area: profileDescription;
+    grid-area: profileHystory;
+}
+.profileHystoryWrapper
+{
+    overflow-y: scroll;
+    max-height: 500px;
 }
 .profileImg
 {
     max-width: 300px;
     border-radius: 14px;
     border: 8px solid rgba(112, 183, 216, 0.507);
+}
+.profileItem
+{
+    margin-left: 12px;
+}
+.profileItem:not(:last-child)
+{
+    margin-bottom: 20px;
+}
+.profileHystory h2
+{
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+.hystoryItem
+{
+    border: 1px solid black;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 15px;
 }

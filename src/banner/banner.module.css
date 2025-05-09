@@ -49,5 +49,62 @@
     border-radius: 20px;
     color: white;
     font-size: 20px;
-    box-shadow: 3px 2px 20px rgba(119, 117, 117, 0.788);;
+    box-shadow: 3px 2px 20px rgba(119, 117, 117, 0.788);
+    text-wrap-mode:nowrap;
+}
+
+@media(max-width: 1288px)
+{
+    .bannerText
+    {
+        width: 40%;
+    }
+    .bannerContainer>img
+    {
+        margin: auto 0;
+        width: 55%;
+        object-fit: contain;
+        height: fit-content;
+    }
+}
+@media(max-width: 1024px)
+{
+    .bannerTitle
+    {
+        font-size: 34px;
+    }
+    .bannerParagraph
+    {
+        font-size: 16px;
+    }
+}
+@media(max-width: 835px)
+{
+    .bannerContainer>img
+    {
+        display: none;
+    }
+    .bannerText
+    {
+        width: 90%;
+    }
+    .bannerText__btn
+    {
+        margin-left: auto;
+    }
+}
+@media(max-width: 670px)
+{
+    .bannerContainer
+    {
+        padding-left: 15px;
+        padding-right: 15px;
+        justify-content: center;
+    }
+    .bannerTitle
+    {
+        font-size: 28px;
+        text-align: center;
+    }
+    
 }

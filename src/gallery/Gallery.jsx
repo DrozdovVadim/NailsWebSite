@@ -35,18 +35,40 @@ const data=[
 
 function Gallery()
 {
+    const xl=1400;
     return(
         <div id="title1" className={generalStyle.section + " "+ style.gallerySection}>
             <div className={generalStyle.container+ " "+ style.galleryContainer}>
                 <h2 className={generalStyle.sectionTitle}>Галерея моих работ</h2>
                 <Swiper className={style.imgWrapper}
                 modules={[Autoplay]}
-                slidesPerView={4}
+                centeredSlides={true}
+                breakpoints={{
+                    0:{
+                        slidesPerView:1,
+                        centeredSlides:true,
+                    },
+                    
+                    768:{
+                        slidesPerView: 2,
+                        centeredSlides:true,
+                    },
+                    1000:
+                    {
+                        slidePerView: 3,
+                    },
+   
+                    1400:{
+                        slidesPerView: 4,
+                      },
+         
+                }}
                 spaceBetween={40}
                 autoplay={{
                     delay: 3500,
                     disableOnInteraction: false, 
                   }}
+                
                 loop={true}
                 >
                     {
