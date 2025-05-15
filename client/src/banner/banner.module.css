@@ -10,7 +10,7 @@
     flex-direction: row;
     background-color: rgb(245, 199, 247);
     justify-content: space-between;
-    box-shadow: 1px 1px 20px rgba(0, 0, 0, 0.048);
+
     border-radius: 18px;
 }
 .bannerContainer>img
@@ -52,13 +52,15 @@
     box-shadow: 3px 2px 20px rgba(119, 117, 117, 0.788);
     text-wrap-mode:nowrap;
 }
-
-@media(max-width: 1288px)
+@media(max-width: 1305px)
 {
-    .bannerText
+        .bannerText
     {
         width: 40%;
     }
+}
+@media(max-width: 1288px)
+{
     .bannerContainer>img
     {
         margin: auto 0;

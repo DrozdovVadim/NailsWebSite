@@ -40,36 +40,7 @@ const hystoryData=[
         id: 3,
         price: 1600,
     },
-    {
-        name: "Маникюр с покрытием",
-        id: 1,
-        price: 1500,
-    },
-    {
-        name: "Маникюр с покрытием + укрепление",
-        id: 2,
-        price: 1700,
-    },
-    {
-        name: "Маникюр с покрытием + починка ногтей",
-        id: 3,
-        price: 1600,
-    },
-    {
-        name: "Маникюр с покрытием",
-        id: 1,
-        price: 1500,
-    },
-    {
-        name: "Маникюр с покрытием + укрепление",
-        id: 2,
-        price: 1700,
-    },
-    {
-        name: "Маникюр с покрытием + починка ногтей",
-        id: 3,
-        price: 1600,
-    },
+
 ]
     
    
@@ -101,7 +72,7 @@ function Profile()
                     {
                         hystoryData.map((item, index)=>{
                             return(
-                            <div className={style.hystoryItem}>
+                            <div className={style.hystoryItem} id={index}>
                              <p>Услуга: {item.name}</p>
                              <p>Цена: {item.price} руб.</p>
                             </div>
