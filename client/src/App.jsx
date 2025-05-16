@@ -15,10 +15,10 @@ const App = () => {
         <Header/>
         <Banner/>
          <Gallery/>
-        {/*<FormSection/>
+        <FormSection/>
         <AboutMe/>
         <Contacts/>
-        <Map/>
+        {/*<Map/>
         <Footer/> */}
     </div>
   );

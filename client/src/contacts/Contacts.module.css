@@ -2,16 +2,16 @@
 {
     background: -webkit-linear-gradient(43deg, #7690d5,#be7d94);
     background: linear-gradient(43deg, #7690d5,#be7d94); 
-    flex-direction: row;   
+    flex-direction: column;   
     justify-content: space-between;                                                                                  
 }
-.contactsText
+.contactsWrapper
 {
-    max-width: 900px;
-    width: 70%;
+
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 .contactsTitle
 {
@@ -20,7 +20,10 @@
 }
 .contactsImg
 {
-    width: 400px;
+    width: 30%;
+    height: auto;
+    aspect-ratio: 1.2/2;
+    margin-top: -100px;
     box-sizing: border-box;
     border: 8px solid white;
     border-radius: 12px;
@@ -29,7 +32,7 @@
 {
     
     background-color: white;
-    width: 700px;
+    width: 65%;
     box-sizing: border-box;
     padding: 50px;
     display: flex;
@@ -75,4 +78,93 @@
 .linksWrapperItem>a:hover::before
 {
     width: 100%;
+}
+/* @media (max-width: 1700px)
+{
+    .contactsText
+    {
+        width: 60%;
+    }
+    .linksWrapper
+    {
+        width: 100%;
+    }
+    .contactsImg
+    {
+        width: 35%;
+
+    }
+}*/
+@media (max-width:1290px)
+{
+    .linksWrapperItem div, .linksWrapperItem a
+    {
+        font-size: 1.2vw;
+    }
+} 
+@media (max-width: 1020px)
+{
+    /* .linksWrapperItem div
+    {
+        width: 40%;
+        
+    }
+    .linksWrapperItem a
+    {
+        width: 40%;
+    }
+    .linksWrapperItem
+    {
+        display: flex;
+        justify-content: space-between;
+    }
+    .linksWrapper
+    {
+        width: 56%;
+    }
+    .contactsImg
+    {
+        width: 40%;
+    } */
+     .contactsImg
+     {
+        width: 40%;
+        object-fit: cover;
+        aspect-ratio: 1/1;
+        margin: 0;
+     }
+     .linksWrapper
+     {
+        width: 45%;
+        padding: 20px;
+     }
+     .linksWrapperItem div
+     {
+        width: 45%;
+     }
+     .linksWrapperItem a
+     {
+        width: 45%;
+        font-size: 10px;
+     }
+}
+@media (max-width: 452px)
+{
+    .contactsWrapper
+    {
+        flex-direction: column-reverse;
+        gap: 20px;
+    }
+    .contactsImg
+    {
+        width: 80%;
+    }
+    .linksWrapper
+    {
+        width: 80%;
+    }
+    .linksWrapper a, .linksWrapper div
+    {
+        font-size: 2.5vw;
+    }
 }
