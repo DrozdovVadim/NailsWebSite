@@ -14,12 +14,13 @@ const App = () => {
     <div >
         <Header/>
         <Banner/>
-         <Gallery/>
+        <Gallery/>
         <FormSection/>
         <AboutMe/>
         <Contacts/>
         <Map/>
         <Footer/> 
+
     </div>
   );
 };

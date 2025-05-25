@@ -39,9 +39,11 @@ const data=[
 function Contacts() {
     return(
         <div id="title4" className={generalStyle.section+ " "+ style.ContactsSection}>
+            
             <div className={generalStyle.container+ " "+ style.contactsContainer}>
-                <div className={style.contactsText}>
-                    <h2 className={generalStyle.sectionTitle+ " "+ style.contactsTitle}>Контакты</h2>
+                <h2 className={generalStyle.sectionTitle}>Контакты</h2>
+                <div className={style.contactsWrapper}>
+                    
                     <div className={style.linksWrapper}>
                         {
                             data.map(item => {
@@ -54,8 +56,8 @@ function Contacts() {
                             })
                         }
                     </div>
-                </div>
-                <img src={contactsImg} className={style.contactsImg} alt="photo" />
+                </div> 
+                
             </div>
         </div>
     )

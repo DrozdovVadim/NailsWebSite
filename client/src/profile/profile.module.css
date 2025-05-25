@@ -73,3 +73,42 @@
 {
     margin-bottom: 10px;
 }
+@media (max-width: 1100px)
+{
+    .profileContainer
+    {
+        width: 85%;
+    }
+}
+@media (max-width: 850px)
+{
+    .profileContainer
+    {
+
+        overflow-y: scroll;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas: 
+        "profileImg"
+        "profileInfo"
+        "profileHystory";
+    }
+    .profileImg
+    {
+        margin: 0 auto;
+        width: 80%;
+    }
+    .profileInfo
+    {
+        margin: 0 auto;
+    }
+    .profileHystory
+    {
+        margin: 0 auto;
+        text-align: center;
+    }
+    .hystoryItem
+    {
+        margin-right: 0;
+    }
+}

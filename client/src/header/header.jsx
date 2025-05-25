@@ -37,6 +37,11 @@ function showProfile() {
     if (profile) {
         profile.classList.toggle(generalStyle.showProfile);
     }
+        const menu = document.getElementById("nav");
+    if (menu)
+    {
+        menu.classList.toggle(style.showMenu)
+    }
 }
 
 const  showMenu = () => 
@@ -62,7 +67,7 @@ function Header() {
                                     <li className={style.headerListItem} key={item.id}>
                                         <a 
                                             href={"#title" + item.id}
-                                            onClick={isLastItem ? () => showProfile() : null}
+                                            onClick={isLastItem ? () => showProfile() : showMenu}
                                         >
                                             {item.name}
                                         </a>

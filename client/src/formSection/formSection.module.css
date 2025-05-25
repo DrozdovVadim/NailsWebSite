@@ -53,3 +53,75 @@
     background-color: rgba(165, 127, 255, 0.705) !important;
     margin-top: auto;
 }
+@media (max-width: 1150px)
+{
+    .formImg
+    {
+        max-width: 350px;
+        height: 350px;
+        margin: auto 0;
+    }
+}
+@media (max-width: 920px)
+{
+    .form input
+    {
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .form
+    {
+        max-width: 250px;
+        height: 350px;
+    }
+}
+@media (max-width: 880px)
+{
+    .formImg
+    {
+        max-width: 250px;
+        height: 250px;
+    }
+        .form
+    {
+        padding-top: 20px;
+        max-width: 250px;
+        height: 250px;
+    }
+}
+@media (max-width: 758px)
+{
+
+    .form
+    {
+        
+        width: 45%;
+    }
+    .formImg
+    {
+        max-width: none;
+        width: 45%;
+        height: auto;
+        aspect-ratio: 1/1;
+    }
+
+}
+@media (max-width: 452px)
+{
+   .formContentWrapper
+   {
+    padding-top: 20px;
+        flex-direction: column-reverse;
+        gap: 20px;
+        align-items: center;
+   }
+   .formImg
+   {
+    width: 80%;
+   }
+   .form
+   {
+    width: 80%;
+   }
+}

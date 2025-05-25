@@ -82,3 +82,10 @@ ul
     }
     
 }
+@media (max-width: 452px)
+{
+    .sectionTitle
+    {
+        margin-bottom: 15px;
+    }
+}

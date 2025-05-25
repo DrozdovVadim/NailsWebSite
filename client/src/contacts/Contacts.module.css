@@ -2,16 +2,16 @@
 {
     background: -webkit-linear-gradient(43deg, #7690d5,#be7d94);
     background: linear-gradient(43deg, #7690d5,#be7d94); 
-    flex-direction: row;   
+    flex-direction: column;   
     justify-content: space-between;                                                                                  
 }
-.contactsText
+.contactsWrapper
 {
-    max-width: 900px;
-    width: 70%;
+
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 .contactsTitle
 {
@@ -20,7 +20,10 @@
 }
 .contactsImg
 {
-    width: 400px;
+    width: 30%;
+    height: auto;
+    aspect-ratio: 1.2/2;
+    margin-top: -100px;
     box-sizing: border-box;
     border: 8px solid white;
     border-radius: 12px;
@@ -29,25 +32,26 @@
 {
     
     background-color: white;
-    width: 700px;
+    width: 85%;
     box-sizing: border-box;
     padding: 50px;
     display: flex;
     flex-direction: column;
-    gap: 30px;
+    gap: 40px;
     border-radius: 12px;
-    margin-bottom: 30px;
+    margin: 0 auto;
 }
 .linksWrapperItem
 {
-    display: flex;
-    
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-content: space-between;
 }
+
 .linksWrapperItem>div
 {
     width: 160px;
     font-size: 24px;
-    margin-right: 40px;
 }
 .linksWrapperItem>a
 {
@@ -56,7 +60,11 @@
     color: rgba(0, 0, 0, 0.685);
     display: flex;
     flex-direction: column;
-    padding: 0 10px;
+}
+.linksWrapperItem div, .linksWrapperItem a
+{
+    /* margin: 0 auto; */
+    width: fit-content;
 }
 .linksWrapperItem>a::before
 {
@@ -75,4 +83,44 @@
 .linksWrapperItem>a:hover::before
 {
     width: 100%;
+}
+@media (max-width: 1150px)
+{
+    .linksWrapper
+    {
+        width: 100%;
+    }
+}
+@media (max-width: 900px)
+{
+    .linksWrapperItem div, .linksWrapperItem a
+    {
+        font-size: 20px;
+    }
+}
+@media (max-width: 750px)
+{
+    .linksWrapperItem div, .linksWrapperItem a
+    {
+        font-size: 16px;
+    }
+    .linksWrapper
+    {
+        gap: 20px;
+    }
+}
+@media (max-width: 500px)
+{
+    .linksWrapperItem
+    {
+        grid-template-columns: 1fr;
+    }
+    .linksWrapperItem div, .linksWrapperItem a
+    {
+        margin: 0 auto;
+    }
+    .linksWrapper
+    {
+        padding: 20px;
+    }
 }

@@ -40,6 +40,7 @@ const hystoryData=[
         id: 3,
         price: 1600,
     },
+    
 
 ]
     

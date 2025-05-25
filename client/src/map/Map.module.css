@@ -3,10 +3,33 @@
     border-radius: 12px;
     max-width: 1300px;
     margin: 0 auto;
+    width: 100%;
+    height: 500px;
 }
 
 .mapContainer
 {
     background: -webkit-linear-gradient(135deg, #e27096,#be71ca,#2594ed,#81d582);
     background: linear-gradient(135deg, #e27096,#be71ca,#2594ed,#81d582);                                      
+}
+@media(max-width: 1260px)
+{
+    .map
+    {
+        height: 400px;
+    }
+}
+@media(max-width: 950px)
+{
+    .map
+    {
+        height: 300px;
+    }
+}
+@media(max-width: 450px)
+{
+    .map
+    {
+        height: 200px;
+    }
 }

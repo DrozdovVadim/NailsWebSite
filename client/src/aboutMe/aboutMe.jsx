@@ -35,7 +35,7 @@ function AboutMe()
     return(
         <div id="title2" className={generalStyle.section+ " "+ style.aboutMeSection}>
             <div className={generalStyle.container+ " "+style.aboutMeContainer}>
-                <h2 className={generalStyle.sectionTitle}>Пару слов о себе</h2>
+                <h2 className={generalStyle.sectionTitle +" "+ style.aboutMeTitle}>Пару слов о себе</h2>
                 <div className={style.aboutMeContent}>
                     <p className={style.aboutMeText}>
                         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga eligendi dignissimos itaque laudantium exercitationem corrupti hic iste, dolor, modi corporis sint ea eum libero suscipit quibusdam nam eaque soluta facere. Lorem ipsum, dolor sit amet consectetur adipisicing elit. Fuga eligendi dignissimos itaque laudantium exercitationem corrupti hic iste, dolor, modi corporis sint ea eum libero suscipit quibusdam nam eaque soluta facere.
