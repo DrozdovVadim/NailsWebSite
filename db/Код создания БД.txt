@@ -1,0 +1,49 @@
+-- Create table Услуга (Service)
+CREATE TABLE Услуга (
+    ID SERIAL PRIMARY KEY,
+    Название VARCHAR(255) NOT NULL,
+    Цена DECIMAL(10, 2) NOT NULL,
+    Длительность INTERVAL NOT NULL
+);
+
+-- Create table Мастер (Master)
+CREATE TABLE Мастер (
+    ID SERIAL PRIMARY KEY,
+    ФИО VARCHAR(255) NOT NULL,
+    Роль VARCHAR(50) NOT NULL
+);
+-- Create table Пользователь (User)
+CREATE TABLE Пользователь (
+    ID SERIAL PRIMARY KEY,
+    ФИО VARCHAR(255) NOT NULL,
+    Номер_телефона VARCHAR(20) NOT NULL,
+    Пароль VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- Create table Оказанные услуги (Provided Services)
+CREATE TABLE Оказанные_услуги (
+    ID SERIAL PRIMARY KEY,
+    Id_Пользователя INT REFERENCES Пользователь(ID),
+    Услуга INT REFERENCES Услуга(ID),
+    Время TIMESTAMP NOT NULL
+);
+
+
+
+-- Create table Расписание (Schedule)
+CREATE TABLE Расписание (
+    ID SERIAL PRIMARY KEY,
+    Id_Мастера INT REFERENCES Мастер(ID),
+    Дата DATE NOT NULL,
+    Время_начала_услуги TIMESTAMP NOT NULL,
+    Время_окончания_услуги TIMESTAMP NOT NULL
+);
+
+-- Create table Оплата (Payment)
+CREATE TABLE Оплата (
+    ID SERIAL PRIMARY KEY,
+    Id_Клиента INT REFERENCES Пользователь(ID),
+    Id_Услуги INT REFERENCES Услуга(ID),
+    Статус_оплаты VARCHAR(50) NOT NULL
+);
