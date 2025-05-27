@@ -1,7 +1,7 @@
 import React from "react";
 import generalStyle from "../App.module.css";
 import style from "./Profile.module.css";
-import profileImg from "../images/aboutMeImg3.jpg";
+import profileImg from "../images/aboutMe/aboutMeImg3.jpg";
 
 function closeProfile()
 {

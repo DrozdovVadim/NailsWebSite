@@ -5,29 +5,19 @@ import style from "./aboutMe.module.css";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from "swiper/modules";
 import generalStyle from "../App.module.css";
-import aboutMeImg1 from "../images/aboutMeImg.jpg";
-import aboutMeImg2 from "../images/aboutMeImg2.jpg";
-import aboutMeImg3 from "../images/aboutMeImg3.jpg";
-import aboutMeImg4 from "../images/aboutMeImg4.jpg";
 
-const data = [
-  {
-    id: 1,
-    src: aboutMeImg1,
-  },
-  {
-    id: 2,
-    src: aboutMeImg2,
-  },
-  {
-    id: 3,
-    src: aboutMeImg3,
-  },
-  {
-    id: 4,
-    src: aboutMeImg4,
-  },
-];
+
+// Динамический импорт всех изображений из папки ../images/aboutMe/
+const images = import.meta.glob("../images/aboutMe/*.{jpg,jpeg,png,gif}", {
+  eager: true,
+  import: "default",
+});
+
+// Преобразование импортированных изображений в массив объектов
+const data = Object.keys(images).map((path, index) => ({
+  id: index + 1,
+  src: images[path],
+}));
 
 
 function AboutMe()

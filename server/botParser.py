@@ -21,8 +21,9 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if message and message.photo:
         # Определяем тему
         thread_id = message.message_thread_id
-        if TOPIC_MAP.get(thread_id =='3'):
-            folder_name = 'galery'
+        print(TOPIC_MAP.get(thread_id))
+        if TOPIC_MAP.get(thread_id) =="topic_2":
+            folder_name = 'gallery'
         else:
             folder_name = 'aboutMe'
 
