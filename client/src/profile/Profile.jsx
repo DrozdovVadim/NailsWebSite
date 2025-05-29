@@ -1,87 +1,242 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import generalStyle from "../App.module.css";
 import style from "./Profile.module.css";
 import profileImg from "../images/aboutMe/aboutMeImg3.jpg";
 
-function closeProfile()
-{
-    const profile = document.getElementById("profile");
-    if (profile) {
-        profile.classList.toggle(generalStyle.showProfile);
-    }
+function closeProfile() {
+  const profile = document.getElementById("profile");
+  if (profile) {
+    profile.classList.toggle(generalStyle.showProfile);
+  }
 }
-const data=[
-    {
-        name: 'клиентов Клиент Клиентович',
-        id: 1,
-    },
-    {
-        name: '+7 (999) 999 99-99',
-        id: 2,
-    },
-    {
-        name: 'pochta.klienta@gmail.com',
-        id: 3,
+
+const hystoryData = [
+  {
+    name: "Маникюр с покрытием",
+    id: 1,
+    price: 1500,
+  },
+  {
+    name: "Маникюр с покрытием + укрепление",
+    id: 2,
+    price: 1700,
+  },
+  {
+    name: "Маникюр с покрытием + починка ногтей",
+    id: 3,
+    price: 1600,
+  },
+];
+
+function Profile() {
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoginForm, setIsLoginForm] = useState(false); // Новое состояние для переключения форм
+  const [formData, setFormData] = useState({
+    full_name: "",
+    phone_number: "",
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get("http://localhost:8000/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        localStorage.removeItem("token");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:8000/register", formData);
+      localStorage.setItem("token", response.data.access_token);
+      const userResponse = await axios.get("http://localhost:8000/users/me", {
+        headers: { Authorization: `Bearer ${response.data.access_token}` },
+      });
+      setUser(userResponse.data);
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Ошибка регистрации: " + (error.response?.data?.detail || "Неизвестная ошибка сервера"));
     }
-]
-const hystoryData=[
-    {
-        name: "Маникюр с покрытием",
-        id: 1,
-        price: 1500,
-    },
-    {
-        name: "Маникюр с покрытием + укрепление",
-        id: 2,
-        price: 1700,
-    },
-    {
-        name: "Маникюр с покрытием + починка ногтей",
-        id: 3,
-        price: 1600,
-    },
-    
+  };
 
-]
-    
-   
+const handleLogin = async (e) => {
+  e.preventDefault();
+  try {
+    const formDataToSend = new FormData();
+    formDataToSend.append("username", formData.email);
+    formDataToSend.append("password", formData.password);
 
+    const response = await axios.post("http://localhost:8000/token", formDataToSend, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    localStorage.setItem("token", response.data.access_token);
+    const userResponse = await axios.get("http://localhost:8000/users/me", {
+      headers: { Authorization: `Bearer ${response.data.access_token}` },
+    });
+    setUser(userResponse.data);
+  } catch (error) {
+    console.error("Login error:", error);
+    alert("Ошибка входа: " + (error.response?.data?.detail || "Неизвестная ошибка сервера"));
+  }
+};
 
-function Profile()
-{
-    return(
-        <div id="profile"  className={generalStyle.container + " " + style.profileContainer}>
-            <div onClick={()=> closeProfile()} className={style.closeProfile}>закрыть</div>
-            <img className={style.profileImg} src={profileImg} alt="" />
-            <div className={style.profileInfo}>
-                {/* <div className={style.prodileItem+" "+style.profileName}>клиентов Клиент Клиентович</div>
-                <div className={style.prodileItem+" "+style.profileNumber}>+7 (999) 999 99-99</div>
-                <div className={style.prodileItem+" "+style.profileMail}>pochta.klienta@gmail.com</div> */}
-                {
-                    data.map((item, index)=> {
-                        
-                        return(
-                            <div key={index} className={style.profileItem}>{item.name}</div>
-                        )
-                    })
-                }
-            </div>
-            
-            <div className={style.profileHystory}>
-                <h2>История посещений</h2>
-                <div className={style.profileHystoryWrapper}>
-                    {
-                        hystoryData.map((item, index)=>{
-                            return(
-                            <div className={style.hystoryItem} id={index}>
-                             <p>Услуга: {item.name}</p>
-                             <p>Цена: {item.price} руб.</p>
-                            </div>
-                        )})
-                    }
-                </div>
-            </div>
+  const toggleForm = () => {
+    setIsLoginForm(!isLoginForm);
+    setFormData({ full_name: "", phone_number: "", email: "", password: "" }); // Очистка формы
+  };
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div id="profile" className={`${generalStyle.container} ${style.profileContainer}`}>
+        <div onClick={closeProfile} className={style.closeProfile}>
+          Закрыть
         </div>
-    )
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+          <div className="bg-white p-8 rounded shadow-md w-96">
+            <h2 className="text-2xl font-bold mb-6 text-center">
+              {isLoginForm ? "Вход" : "Регистрация"}
+            </h2>
+            <form onSubmit={isLoginForm ? handleLogin : handleRegister}>
+              {!isLoginForm && (
+                <>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">ФИО</label>
+                    <input
+                      type="text"
+                      name="full_name"
+                      value={formData.full_name}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border rounded"
+                      required
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className="block text-gray-700">Номер телефона</label>
+                    <input
+                      type="tel"
+                      name="phone_number"
+                      value={formData.phone_number}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border rounded"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+              <div className="mb-4">
+                <label className="block text-gray-700">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-6">
+                <label className="block text-gray-700">Пароль</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
+              >
+                {isLoginForm ? "Войти" : "Зарегистрироваться"}
+              </button>
+            </form>
+            <button
+              onClick={toggleForm}
+              className="mt-4 w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600"
+            >
+              {isLoginForm ? "К регистрации" : "Войти"}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const data = [
+    {
+      name: user.ФИО,
+      id: 1,
+    },
+    {
+      name: user.Номер_телефона,
+      id: 2,
+    },
+    {
+      name: user.Email,
+      id: 3,
+    },
+  ];
+
+  return (
+    <div id="profile" className={`${generalStyle.container} ${style.profileContainer}`}>
+      <div onClick={closeProfile} className={style.closeProfile}>
+        Закрыть
+      </div>
+      <img className={style.profileImg} src={profileImg} alt="" />
+      <div className={style.profileInfo}>
+        {data.map((item) => (
+          <div key={item.id} className={style.profileItem}>
+            {item.name}
+          </div>
+        ))}
+      </div>
+      <div className={style.profileHystory}>
+        <h2>История посещений</h2>
+        <div className={style.profileHystoryWrapper}>
+          {hystoryData.map((item) => (
+            <div key={item.id} className={style.hystoryItem} id={item.id}>
+              <p>Услуга: {item.name}</p>
+              <p>Цена: {item.price} руб.</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
+
 export default Profile;

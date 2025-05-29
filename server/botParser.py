@@ -11,7 +11,7 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 TOPIC_MAP = {
     3: "topic_3",
-    2: "topic_2"
+    2: "topic_2",
 }
 
 
