@@ -33,7 +33,7 @@ const hystoryData = [
 function Profile() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isLoginForm, setIsLoginForm] = useState(false); // Новое состояние для переключения форм
+  const [isLoginForm, setIsLoginForm] = useState(false);
   const [formData, setFormData] = useState({
     full_name: "",
     phone_number: "",
@@ -41,6 +41,24 @@ function Profile() {
     password: "",
   });
   const navigate = useNavigate();
+
+  // Создаём массив data на основе user
+  const data = user
+    ? [
+        {
+          name: user.full_name || "Не указано",
+          id: 1,
+        },
+        {
+          name: user.phone_number || "Не указано",
+          id: 2,
+        },
+        {
+          name: user.email || "Не указано",
+          id: 3,
+        },
+      ]
+    : [];
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -85,32 +103,32 @@ function Profile() {
     }
   };
 
-const handleLogin = async (e) => {
-  e.preventDefault();
-  try {
-    const formDataToSend = new FormData();
-    formDataToSend.append("username", formData.email);
-    formDataToSend.append("password", formData.password);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("username", formData.email);
+      formDataToSend.append("password", formData.password);
 
-    const response = await axios.post("http://localhost:8000/token", formDataToSend, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    localStorage.setItem("token", response.data.access_token);
-    const userResponse = await axios.get("http://localhost:8000/users/me", {
-      headers: { Authorization: `Bearer ${response.data.access_token}` },
-    });
-    setUser(userResponse.data);
-  } catch (error) {
-    console.error("Login error:", error);
-    alert("Ошибка входа: " + (error.response?.data?.detail || "Неизвестная ошибка сервера"));
-  }
-};
+      const response = await axios.post("http://localhost:8000/token", formDataToSend, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      localStorage.setItem("token", response.data.access_token);
+      const userResponse = await axios.get("http://localhost:8000/users/me", {
+        headers: { Authorization: `Bearer ${response.data.access_token}` },
+      });
+      setUser(userResponse.data);
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Ошибка входа: " + (error.response?.data?.detail || "Неизвестная ошибка сервера"));
+    }
+  };
 
   const toggleForm = () => {
     setIsLoginForm(!isLoginForm);
-    setFormData({ full_name: "", phone_number: "", email: "", password: "" }); // Очистка формы
+    setFormData({ full_name: "", phone_number: "", email: "", password: "" });
   };
 
   if (isLoading) {
@@ -123,46 +141,41 @@ const handleLogin = async (e) => {
         <div onClick={closeProfile} className={style.closeProfile}>
           Закрыть
         </div>
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-          <div className="bg-white p-8 rounded shadow-md w-96">
-            <h2 className="text-2xl font-bold mb-6 text-center">
-              {isLoginForm ? "Вход" : "Регистрация"}
-            </h2>
+        <div>
+          <div>
+            <h2>{isLoginForm ? "Вход" : "Регистрация"}</h2>
             <form onSubmit={isLoginForm ? handleLogin : handleRegister}>
               {!isLoginForm && (
                 <>
-                  <div className="mb-4">
-                    <label className="block text-gray-700">ФИО</label>
+                  <div>
+                    <label>ФИО</label>
                     <input
                       type="text"
                       name="full_name"
                       value={formData.full_name}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border rounded"
                       required
                     />
                   </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Номер телефона</label>
+                  <div>
+                    <label>Номер телефона</label>
                     <input
                       type="tel"
                       name="phone_number"
                       value={formData.phone_number}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border rounded"
                       required
                     />
                   </div>
                 </>
               )}
-              <div className="mb-4">
-                <label className="block text-gray-700">Email</label>
+              <div>
+                <label>Email</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
                   required
                 />
               </div>
@@ -173,43 +186,17 @@ const handleLogin = async (e) => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
                   required
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-              >
-                {isLoginForm ? "Войти" : "Зарегистрироваться"}
-              </button>
+              <button type="submit">{isLoginForm ? "Войти" : "Зарегистрироваться"}</button>
             </form>
-            <button
-              onClick={toggleForm}
-              className="mt-4 w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600"
-            >
-              {isLoginForm ? "К регистрации" : "Войти"}
-            </button>
+            <button onClick={toggleForm}>{isLoginForm ? "К регистрации" : "Войти"}</button>
           </div>
         </div>
       </div>
     );
   }
-
-  const data = [
-    {
-      name: user.ФИО,
-      id: 1,
-    },
-    {
-      name: user.Номер_телефона,
-      id: 2,
-    },
-    {
-      name: user.Email,
-      id: 3,
-    },
-  ];
 
   return (
     <div id="profile" className={`${generalStyle.container} ${style.profileContainer}`}>
