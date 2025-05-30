@@ -22,7 +22,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # Определяем тему
         thread_id = message.message_thread_id
         print(TOPIC_MAP.get(thread_id))
-        if TOPIC_MAP.get(thread_id) =="topic_2":
+        if TOPIC_MAP.get(thread_id) == "topic_2":
             folder_name = 'gallery'
         else:
             folder_name = 'aboutMe'
@@ -31,10 +31,13 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         folder_path = os.path.join("../client/src/images", folder_name)
         os.makedirs(folder_path, exist_ok=True)
 
-        # Сохраняем только ОДНУ (большую) версию
+        # Получаем ID сообщения
+        message_id = message.message_id
+
+        # Сохраняем только ОДНУ (большую) версию с именем по message_id
         photo = message.photo[-1]
         file = await context.bot.get_file(photo.file_id)
-        file_path = os.path.join(folder_path, f"{file.file_id}.jpg")
+        file_path = os.path.join(folder_path, f"{message_id}.jpg")  # Имя файла = ID сообщения
         await file.download_to_drive(file_path)
         print(f"Сохранено в '{folder_name}': {file_path}")
     else:

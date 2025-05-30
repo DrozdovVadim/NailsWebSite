@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import generalStyle from "../App.module.css";
 import style from "./Profile.module.css";
-import profileImg from "../images/aboutMe/aboutMeImg3.jpg";
+import profileImg from "../images/aboutMe/aboutMeImg2.jpg";
 
 function closeProfile() {
   const profile = document.getElementById("profile");
@@ -137,16 +137,18 @@ function Profile() {
 
   if (!user) {
     return (
-      <div id="profile" className={`${generalStyle.container} ${style.profileContainer}`}>
+      <div id="profile" className={`${generalStyle.container} ${style.profileContainer} ${style.unloginProfileCont}`}>
         <div onClick={closeProfile} className={style.closeProfile}>
           Закрыть
         </div>
-        <div>
-          <div>
-            <h2>{isLoginForm ? "Вход" : "Регистрация"}</h2>
+        <div className={style.registerForm}>
+
+            <h2 >
+              {isLoginForm ? "Вход" : "Регистрация"}
+            </h2>
             <form onSubmit={isLoginForm ? handleLogin : handleRegister}>
               {!isLoginForm && (
-                <>
+                <div className={style.authorForm}>
                   <div>
                     <label>ФИО</label>
                     <input
@@ -157,8 +159,8 @@ function Profile() {
                       required
                     />
                   </div>
-                  <div>
-                    <label>Номер телефона</label>
+                  <div >
+                    <label >Номер телефона</label>
                     <input
                       type="tel"
                       name="phone_number"
@@ -167,7 +169,7 @@ function Profile() {
                       required
                     />
                   </div>
-                </>
+                </div>
               )}
               <div>
                 <label>Email</label>
@@ -176,24 +178,29 @@ function Profile() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  required
-                />
+                  required/>
               </div>
-              <div className="mb-6">
-                <label className="block text-gray-700">Пароль</label>
+              <div>
+                <label>Пароль</label>
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  required
-                />
+                  required/>
               </div>
-              <button type="submit">{isLoginForm ? "Войти" : "Зарегистрироваться"}</button>
+              <button className={style.profileSubmitBtn} type="submit">
+                {isLoginForm ? "Войти" : "Зарегистрироваться"}
+              </button>
             </form>
-            <button onClick={toggleForm}>{isLoginForm ? "К регистрации" : "Войти"}</button>
+            <div className={style.profileToggleForm}>
+              {
+                isLoginForm ? <span></span> : <span>Есть профиль? </span>
+              }
+               <a onClick={toggleForm}>{isLoginForm ? "Зарегестрировать профиль" : " Войти"}</a>
+            </div>
           </div>
-        </div>
+
       </div>
     );
   }

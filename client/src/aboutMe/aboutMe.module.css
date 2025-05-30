@@ -37,6 +37,23 @@
 .swiperSlide
 {
     width: auto !important;
+    position: relative;
+}
+.deletePhoto
+{
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    transition: 0.3s;
+    color:white;
+    padding: 5px 15px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: rgba(255, 0, 0, 0.426);
+}
+.deletePhoto:hover
+{
+    color:red;
 }
 @media (max-width: 1314px)
 {

@@ -4,6 +4,7 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import generalStyle from "../App.module.css";
 import style from "./gallery.module.css";
+import axios from "axios";
 
 // Динамический импорт всех изображений из папки ../images/gallery/
 const images = import.meta.glob("../images/gallery/*.{jpg,jpeg,png,gif}", {
@@ -23,6 +24,19 @@ function Gallery() {
   const toggleView = () => {
     setIsGridView(!isGridView); // Переключение режима
   };
+  const deletePhoto= async(photoSrc) =>
+  {
+      try{
+        const res= await axios.delete('http://localhost:8001/delete-from-gallery',{
+          data :{ src: photoSrc},
+        })
+        
+      }
+      catch (error)
+      {
+        console.log(error)
+      }
+  }
 
   return (
     <div id="title1" className={`${generalStyle.section} ${style.gallerySection}`}>
@@ -31,12 +45,13 @@ function Gallery() {
         {isGridView ? (
           <div className={style.gridContainer}>
             {data.map((item) => (
-              <div key={item.id} className={style.gridItem}>
+              <div key={item.id} className={style.gridItem} onClick={()=> deletePhoto(item.src)}>
                 <img
                   src={item.src}
                   className={style.galleryPhoto}
                   alt={`photo-${item.id}`}
                 />
+                
               </div>
             ))}
           </div>
@@ -75,6 +90,7 @@ function Gallery() {
                   className={style.galleryPhoto}
                   alt={`photo-${item.id}`}
                 />
+                <a onClick={() => deletePhoto(item.src)} className={style.deletePhotoBtn}>удалить</a>
               </SwiperSlide>
             ))}
           </Swiper>
@@ -91,7 +107,6 @@ function Gallery() {
             onClick={toggleView}
             aria-label="Свернуть галерею"
           >
-            ✕
           </a>
         )}
       </div>
