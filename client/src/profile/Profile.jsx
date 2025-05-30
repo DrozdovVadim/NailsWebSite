@@ -119,79 +119,70 @@ const handleLogin = async (e) => {
 
   if (!user) {
     return (
-      <div id="profile" className={`${generalStyle.container} ${style.profileContainer}`}>
+      <div id="profile" className={`${generalStyle.container} ${style.profileContainer} ${style.unloginProfileCont}`}>
         <div onClick={closeProfile} className={style.closeProfile}>
           Закрыть
         </div>
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-          <div className="bg-white p-8 rounded shadow-md w-96">
-            <h2 className="text-2xl font-bold mb-6 text-center">
+        <div className={style.registerForm}>
+
+            <h2 >
               {isLoginForm ? "Вход" : "Регистрация"}
             </h2>
             <form onSubmit={isLoginForm ? handleLogin : handleRegister}>
               {!isLoginForm && (
-                <>
-                  <div className="mb-4">
-                    <label className="block text-gray-700">ФИО</label>
+                <div className={style.authorForm}>
+                  <div>
+                    <label>ФИО</label>
                     <input
                       type="text"
                       name="full_name"
                       value={formData.full_name}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border rounded"
                       required
                     />
                   </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-700">Номер телефона</label>
+                  <div >
+                    <label >Номер телефона</label>
                     <input
                       type="tel"
                       name="phone_number"
                       value={formData.phone_number}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border rounded"
                       required
                     />
                   </div>
-                </>
+                </div>
               )}
-              <div className="mb-4">
-                <label className="block text-gray-700">Email</label>
+              <div>
+                <label>Email</label>
                 <input
                   type="email"
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  required
-                />
+                  required/>
               </div>
-              <div className="mb-6">
-                <label className="block text-gray-700">Пароль</label>
+              <div>
+                <label>Пароль</label>
                 <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded"
-                  required
-                />
+                  required/>
               </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-              >
+              <button className={style.profileSubmitBtn} type="submit">
                 {isLoginForm ? "Войти" : "Зарегистрироваться"}
               </button>
             </form>
-            <button
-              onClick={toggleForm}
-              className="mt-4 w-full bg-gray-500 text-white py-2 rounded hover:bg-gray-600"
-            >
-              {isLoginForm ? "К регистрации" : "Войти"}
-            </button>
+            <div className={style.profileToggleForm}>
+              {
+                isLoginForm ? <span></span> : <span>Есть профиль? </span>
+              }
+               <a onClick={toggleForm}>{isLoginForm ? "Зарегестрировать профиль" : " Войти"}</a>
+            </div>
           </div>
-        </div>
+
       </div>
     );
   }

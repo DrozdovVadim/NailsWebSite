@@ -73,11 +73,95 @@
 {
     margin-bottom: 10px;
 }
+.unloginProfileCont
+{
+    min-width: 0;
+    min-height: 0;
+    padding: 50px;
+    width: auto;
+    grid-template-columns: none;
+    grid-template-rows: none;
+    grid-template-areas: unset;
+}
+.authorForm
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.authorForm div, .registerForm form div:not(:first-child)
+{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    
+}
+form input
+{
+    border-radius: 6px;
+  height: 25px;
+  border: none;
+  box-shadow: 1px 1px 7px rgba(0, 0, 0, 0.46);
+  padding-left: 10px;
+  box-sizing: border-box;
+  outline: none;
+}
+.authorForm
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px !important;
+}
+.registerForm
+{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.profileToggleForm
+{
+    margin-left: auto;
+    margin-right: 10px;
+}
+.registerForm form
+{
+    background-color: rgb(245, 199, 247);
+    padding: 30px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 350px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    align-items: center;
+}
+.registerForm form div:not(:last-child)
+{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+.profileSubmitBtn
+{
+    width: fit-content;
+    padding: 10px 20px;
+    border-radius: 14px;
+    border: none;
+    background-color: rgb(255, 127, 244);
+    color: white;
+    font-size: 16px;
+}
 @media (max-width: 1100px)
 {
     .profileContainer
     {
         width: 85%;
+    }
+    .unloginProfileCont
+    {
+        width: auto;
     }
 }
 @media (max-width: 850px)
@@ -92,6 +176,12 @@
         "profileImg"
         "profileInfo"
         "profileHystory";
+    }
+    .unloginProfileCont
+    {
+        grid-template-columns: none;
+        grid-template-rows: none;
+        grid-template-areas: unset;
     }
     .profileImg
     {
@@ -110,5 +200,26 @@
     .hystoryItem
     {
         margin-right: 0;
+    }
+}
+@media (max-width: 510px)
+{
+    .registerForm form
+    {
+        width: 100%;
+    }
+}
+@media (max-width: 400px)
+{
+    .unloginProfileCont
+    {
+        padding: 25px;
+    }
+}
+@media (max-width: 350px)
+{
+    .registerForm form
+    {
+        padding: 15px;
     }
 }
