@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import generalStyle from "../App.module.css";
 import style from "./gallery.module.css";
 import axios from "axios";
+import { useUser } from "../context/UserContext"; // Импортируем хук
 
 // Динамический импорт всех изображений из папки ../images/gallery/
 const images = import.meta.glob("../images/gallery/*.{jpg,jpeg,png,gif}", {
@@ -13,30 +14,45 @@ const images = import.meta.glob("../images/gallery/*.{jpg,jpeg,png,gif}", {
 });
 
 // Преобразование импортированных изображений в массив объектов
-const data = Object.keys(images).map((path, index) => ({
+const initialData = Object.keys(images).map((path, index) => ({
   id: index + 1,
   src: images[path],
 }));
 
 function Gallery() {
+  const { user } = useUser(); // Получаем user из контекста
+  const userRole = user ? user.Role : false; // Получаем роль, если пользователь авторизован
+  const [data, setData] = useState(initialData); // Состояние для данных галереи
   const [isGridView, setIsGridView] = useState(false); // Состояние для переключения между слайдером и сеткой
+
+useEffect(()=> {
+  setData(Object.keys(images).map((path, index) => ({
+  id: index + 1,
+  src: images[path],
+})))
+})
 
   const toggleView = () => {
     setIsGridView(!isGridView); // Переключение режима
   };
-  const deletePhoto= async(photoSrc) =>
-  {
-      try{
-        const res= await axios.delete('http://localhost:8001/delete-from-gallery',{
-          data :{ src: photoSrc},
-        })
-        
-      }
-      catch (error)
-      {
-        console.log(error)
-      }
-  }
+
+  const deletePhoto = async (photoSrc) => {
+    // Проверка роли перед удалением
+    if (!userRole) {
+      alert("У вас нет прав для удаления фотографий.");
+      return;
+    }
+
+    try {
+      const res = await axios.delete("http://localhost:8001/delete-from-gallery", {
+        data: { src: photoSrc },
+      });
+      // После успешного удаления обновляем состояние, удаляя фотографию
+      setData(data.filter((item) => item.src !== photoSrc));
+    } catch (error) {
+      console.error("Ошибка удаления:", error);
+    }
+  };
 
   return (
     <div id="title1" className={`${generalStyle.section} ${style.gallerySection}`}>
@@ -45,13 +61,13 @@ function Gallery() {
         {isGridView ? (
           <div className={style.gridContainer}>
             {data.map((item) => (
-              <div key={item.id} className={style.gridItem} onClick={()=> deletePhoto(item.src)}>
+              <div key={item.id} className={userRole && style.gridItem} onClick={() => userRole&& deletePhoto(item.src)}>
                 <img
                   src={item.src}
                   className={style.galleryPhoto}
                   alt={`photo-${item.id}`}
                 />
-                
+
               </div>
             ))}
           </div>
@@ -90,15 +106,19 @@ function Gallery() {
                   className={style.galleryPhoto}
                   alt={`photo-${item.id}`}
                 />
-                <a onClick={() => deletePhoto(item.src)} className={style.deletePhotoBtn}>удалить</a>
+                {userRole && (
+                  <div
+                    onClick={() => deletePhoto(item.src)}
+                    className={style.deletePhotoBtn}
+                  >
+                    удалить
+                  </div>
+                )}
               </SwiperSlide>
             ))}
           </Swiper>
         )}
-        <a
-          className={style.galleryBtn}
-          onClick={toggleView}
-        >
+        <a className={style.galleryBtn} onClick={toggleView}>
           {isGridView ? "Свернуть галерею" : "Посмотреть все работы"}
         </a>
         {isGridView && (
@@ -106,8 +126,7 @@ function Gallery() {
             className={style.closeGridBtn}
             onClick={toggleView}
             aria-label="Свернуть галерею"
-          >
-          </a>
+          ></a>
         )}
       </div>
     </div>

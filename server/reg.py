@@ -2,16 +2,14 @@ from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pydantic import BaseModel
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime, timedelta, timezone
 import uvicorn
 
 app = FastAPI()
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -30,28 +28,30 @@ def get_db_connection():
         host="localhost",
         port="5432"
     )
-SECRET_KEY = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"
+
+SECRET_KEY = "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6"  # Замените на более безопасный ключ
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
 
 class UserCreate(BaseModel):
     full_name: str
     phone_number: str
     email: str
     password: str
+    role: bool
 
 class UserLogin(BaseModel):
     email: str
     password: str
 
-class Token(BaseModel):
+class TokenWithUserInfo(BaseModel):
     access_token: str
     token_type: str
+    email: str
+    phone_number: str
 
 # Helper functions
 def verify_password(plain_password, hashed_password):
@@ -84,7 +84,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     conn = get_db_connection()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("SELECT * FROM Пользователь WHERE Email = %s", (email,))
+            cur.execute('SELECT * FROM "User" WHERE "Email" = %s', (email,))
             user = cur.fetchone()
             if user is None:
                 raise credentials_exception
@@ -93,39 +93,49 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         conn.close()
 
 # API endpoints
-@app.post("/register", response_model=Token)
+@app.post("/register", response_model=TokenWithUserInfo)
 async def register(user: UserCreate):
     conn = get_db_connection()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             # Check if user exists
-            cur.execute("SELECT * FROM Пользователь WHERE Email = %s", (user.email,))
+            cur.execute('SELECT * FROM "User" WHERE "Email" = %s', (user.email,))
             if cur.fetchone():
                 raise HTTPException(status_code=400, detail="Email already registered")
             
             # Create new user
             hashed_password = get_password_hash(user.password)
             cur.execute(
-                """INSERT INTO Пользователь (ФИО, Номер_телефона, Пароль, Email) 
-                VALUES (%s, %s, %s, %s) RETURNING ID""",
-                (user.full_name, user.phone_number, hashed_password, user.email)
+                """INSERT INTO "User" ("FullName", "PhoneNumber", "Email", "Password", "Role") 
+                VALUES (%s, %s, %s, %s, %s) 
+                RETURNING "id", "FullName", "PhoneNumber", "Email", "Role" """,
+                (user.full_name, user.phone_number, user.email, hashed_password, user.role)
             )
+            new_user = cur.fetchone()
             conn.commit()
             
-            # Create token
+            # Create token and return with user info
             access_token = create_access_token(data={"sub": user.email})
-            return {"access_token": access_token, "token_type": "bearer"}
+            return {
+                "access_token": access_token,
+                "token_type": "bearer",
+                "email": user.email,
+                "phone_number": user.phone_number
+            }
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
     finally:
         conn.close()
 
-@app.post("/token", response_model=Token)
+@app.post("/token", response_model=TokenWithUserInfo)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     conn = get_db_connection()
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-            cur.execute("SELECT * FROM Пользователь WHERE Email = %s", (form_data.username,))
+            cur.execute('SELECT * FROM "User" WHERE "Email" = %s', (form_data.username,))
             user = cur.fetchone()
-            if not user or not verify_password(form_data.password, user['Пароль']):
+            if not user or not verify_password(form_data.password, user["Password"]):
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Incorrect email or password",
@@ -133,7 +143,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
                 )
             
             access_token = create_access_token(data={"sub": form_data.username})
-            return {"access_token": access_token, "token_type": "bearer"}
+            return {
+                "access_token": access_token,
+                "token_type": "bearer",
+                "email": user["Email"],
+                "phone_number": user["PhoneNumber"]
+            }
     finally:
         conn.close()
 
@@ -142,5 +157,4 @@ async def read_users_me(current_user: dict = Depends(get_current_user)):
     return current_user
 
 if __name__ == "__main__":
-
     uvicorn.run("reg:app", host="0.0.0.0", port=8000, reload=True)

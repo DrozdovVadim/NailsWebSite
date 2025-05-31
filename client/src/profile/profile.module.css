@@ -26,6 +26,19 @@
     top: 15px;
     right: 15px;
     cursor: pointer;
+    box-sizing: border-box;
+    padding: 5px 15px;
+    border-radius: 5px;
+    background-color: rgba(255, 0, 0, 0.426);
+    color: white;
+    transition: 0.5s;
+    user-select: none;
+    border: 1px solid transparent;
+}
+.closeProfile:hover
+{
+    color:red;
+    border: 1px solid red;
 }
 .profileInfo
 {
@@ -152,6 +165,26 @@ form input
     background-color: rgb(255, 127, 244);
     color: white;
     font-size: 16px;
+}
+.logoutBtn
+{
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    box-sizing: border-box;
+    padding: 5px 15px;
+    border-radius: 5px;
+    background-color: rgba(255, 0, 0, 0.426);
+    color: white;
+    transition: 0.3s;
+    user-select: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+}
+.logoutBtn:hover
+{
+    color: red;
+    border: 1px solid red;
 }
 @media (max-width: 1100px)
 {

@@ -7,21 +7,23 @@ import AboutMe from './aboutMe/aboutMe';
 import Contacts from './contacts/Contacts';
 import Map from './map/Map';
 import Footer from './footer/Footer';
-
+import { UserProvider } from './context/UserContext';
 
 const App = () => {
   return (
-    <div >
-        <Header/>
-        <Banner/>
-        <Gallery/>
-        <FormSection/>
-        <AboutMe/>
-        <Contacts/>
-        <Map/>
-        <Footer/> 
-    
-    </div>
+    <UserProvider>
+      <div>
+        <Header />
+        <Banner />
+        <Gallery />
+        <FormSection />
+        <AboutMe />
+        <Contacts />
+        <Map />
+        <Footer />
+      </div>
+    </UserProvider>
   );
 };
+
 export default App;

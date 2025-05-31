@@ -43,6 +43,7 @@
     box-sizing: border-box;
     border-radius: 10px;
     background-color: rgba(255, 0, 0, 0.426);
+    cursor: pointer;
 }
 .deletePhotoBtn:hover
 {
@@ -58,6 +59,7 @@
     color: white;
     font-size: 20px;
     box-shadow: 3px 2px 20px rgba(119, 117, 117, 0.788);
+    margin-top: 20px;
 }
 
 .galleryPhoto
@@ -114,6 +116,7 @@
     align-items: center; 
     color: white; 
     font-size: 16px;
+    cursor: pointer;
 }
 .gridItem:hover::before
 {
