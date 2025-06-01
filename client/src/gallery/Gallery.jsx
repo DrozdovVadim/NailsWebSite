@@ -14,7 +14,7 @@ const images = import.meta.glob("../images/gallery/*.{jpg,jpeg,png,gif}", {
 });
 
 // Преобразование импортированных изображений в массив объектов
-const initialData = Object.keys(images).map((path, index) => ({
+const data = Object.keys(images).map((path, index) => ({
   id: index + 1,
   src: images[path],
 }));
@@ -22,15 +22,9 @@ const initialData = Object.keys(images).map((path, index) => ({
 function Gallery() {
   const { user } = useUser(); // Получаем user из контекста
   const userRole = user ? user.Role : false; // Получаем роль, если пользователь авторизован
-  const [data, setData] = useState(initialData); // Состояние для данных галереи
   const [isGridView, setIsGridView] = useState(false); // Состояние для переключения между слайдером и сеткой
 
-useEffect(()=> {
-  setData(Object.keys(images).map((path, index) => ({
-  id: index + 1,
-  src: images[path],
-})))
-})
+
 
   const toggleView = () => {
     setIsGridView(!isGridView); // Переключение режима
@@ -44,11 +38,9 @@ useEffect(()=> {
     }
 
     try {
-      const res = await axios.delete("http://localhost:8001/delete-from-gallery", {
+      const req = await axios.delete("http://localhost:8000/delete-from-gallery", {
         data: { src: photoSrc },
       });
-      // После успешного удаления обновляем состояние, удаляя фотографию
-      setData(data.filter((item) => item.src !== photoSrc));
     } catch (error) {
       console.error("Ошибка удаления:", error);
     }

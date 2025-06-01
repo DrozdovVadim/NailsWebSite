@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from "swiper/modules";
 import generalStyle from "../App.module.css";
 import axios from "axios";
+import { useUser } from "../context/UserContext";
 
 
 // Динамический импорт всех изображений из папки ../images/aboutMe/
@@ -23,7 +24,7 @@ const data = Object.keys(images).map((path, index) => ({
 const deletePhoto = async(photoSrc) =>
 {
     try{
-            const req= await axios.delete('http://localhost:8001/delete-from-about-me',
+            const req= await axios.delete('http://localhost:8000/delete-from-about-me',
         {data: {src: photoSrc}}
     )
     }
@@ -38,6 +39,8 @@ const deletePhoto = async(photoSrc) =>
 
 function AboutMe()
 {
+    const {user}= useUser();
+    const userRole= user? user.Role: false;
     return(
         <div id="title2" className={generalStyle.section+ " "+ style.aboutMeSection}>
             <div className={generalStyle.container+ " "+style.aboutMeContainer}>
@@ -60,7 +63,10 @@ function AboutMe()
                         {data.map((item) => (
                         <SwiperSlide key={item.id} className={style.swiperSlide}>
                             <img className={style.aboutMeImg} src={item.src} alt="photo" />
-                            <a onClick={() => deletePhoto(item.src)} className={style.deletePhoto}>удалить</a>
+                            {
+                                userRole&& <a onClick={() => deletePhoto(item.src)} className={style.deletePhoto}>удалить</a>
+                            }
+                            
                         </SwiperSlide>
                         ))}
                     </Swiper>
