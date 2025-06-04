@@ -46,5 +46,7 @@ async def delete_photo_aboutMe(data: dict):
     else:
         raise HTTPException(status_code=404, detail="Файл не найден")
 
+
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8001)

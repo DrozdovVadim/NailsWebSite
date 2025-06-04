@@ -16,7 +16,7 @@ import uvicorn
 from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 import shutil
-
+from datetime import datetime, timedelta
 # Apply nest_asyncio to allow running Telegram bot in the same event loop
 nest_asyncio.apply()
 
@@ -68,11 +68,28 @@ class TokenWithUserInfo(BaseModel):
     email: str
     phone_number: str
 
+class ServiceRes(BaseModel):
+    id: int
+    name: str
+    price: float
+    duration: float
+class UpdateScheduleRequest(BaseModel):
+    is_available: bool
 class ServiceResponse(BaseModel):
     id: int
     service_name: str
     price: float
     date: datetime
+
+    class Config:
+        orm_mode = False
+class ScheduleResponse(BaseModel):
+    id: int
+    date: str
+    start_time: str
+    end_time: str
+    is_available: bool
+    is_expired: bool  # Новое поле
 
     class Config:
         orm_mode = False
@@ -328,6 +345,249 @@ async def delete_photo_aboutMe(data: dict):
         return {"message": f"Файл {file_name} удален"}
     else:
         raise HTTPException(status_code=404, detail="Файл не найден")
+
+
+
+
+@app.get("/schedule", response_model=List[ScheduleResponse])
+def get_schedule():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT id, "Date", "StartTime", "EndTime", "isAvailable" FROM "Schedule"')
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    result = []
+    current_time = datetime.now(timezone.utc)
+    for id_, date_, start_time, end_time, is_available in rows:
+        slot_datetime = datetime.combine(date_, start_time, tzinfo=timezone.utc)
+        is_expired = slot_datetime < current_time
+
+        result.append(ScheduleResponse(
+            id=id_,
+            date=date_.isoformat(),
+            start_time=start_time.strftime("%H:%M"),
+            end_time=end_time.strftime("%H:%M"),
+            is_available=is_available and not is_expired,
+            is_expired=is_expired  # Обязательно включаем поле
+        ))
+    return result
+
+@app.patch("/schedule/{slot_id}")
+def update_schedule(slot_id: int, update_data: UpdateScheduleRequest):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                'UPDATE "Schedule" SET "isAvailable" = %s WHERE id = %s RETURNING id',
+                (update_data.is_available, slot_id)
+            )
+            updated = cur.fetchone()
+            if not updated:
+                raise HTTPException(status_code=404, detail="Слот не найден")
+            conn.commit()
+            return {"message": "Слот обновлен"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+
+
+
+@app.get("/services", response_model=List[ServiceRes])
+def get_services():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM "Service"')
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+
+    result = []
+    for row in rows:
+        # Предполагаем, что row - это кортеж (id, name, price, duration)
+        id_, name, price, duration = row
+        
+        # Преобразуем duration из timedelta в минуты
+        if isinstance(duration, timedelta):
+            duration_in_minutes = int(duration.total_seconds() / 60)
+        else:
+            duration_in_minutes = 0  # или другое значение по умолчанию
+            
+        result.append(ServiceRes(
+            id=id_,
+            name=name,
+            price=float(price),  # Явное преобразование в float
+            duration=duration_in_minutes
+        ))
+    return result
+
+class UpdateScheduleRequest(BaseModel):
+    is_available: bool
+
+@app.patch("/schedule/{slot_id}")
+def update_schedule(slot_id: int, update_data: UpdateScheduleRequest):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                'UPDATE "Schedule" SET "isAvailable" = %s WHERE id = %s RETURNING id',
+                (update_data.is_available, slot_id)
+            )
+            updated = cur.fetchone()
+            if not updated:
+                raise HTTPException(status_code=404, detail="Слот не найден")
+            conn.commit()
+            return {"message": "Слот обновлен"}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+
+
+@app.post("/book-slot")
+async def book_slot(
+    userId: int = Form(...),
+    serviceId: int = Form(...),
+    scheduleId: int = Form(...),
+    current_user: dict = Depends(get_current_user)
+):
+    if current_user["id"] != userId:
+        raise HTTPException(status_code=403, detail="Доступ запрещён: чужой userId")
+
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            # Получаем слот
+            cur.execute('SELECT * FROM "Schedule" WHERE id = %s', (scheduleId,))
+            schedule = cur.fetchone()
+
+            if not schedule:
+                raise HTTPException(status_code=404, detail="Слот не найден")
+            if not schedule["isAvailable"]:
+                raise HTTPException(status_code=400, detail="Слот уже занят")
+
+            # Combine Date and StartTime to create slot_datetime
+            slot_date = schedule["Date"]  # Assuming Date is a date object
+            slot_time = schedule["StartTime"]  # Assuming StartTime is a time object
+            slot_datetime = datetime.combine(slot_date, slot_time, tzinfo=timezone.utc)
+
+            # Проверяем дату и время
+            now = datetime.now(timezone.utc)
+            if slot_datetime < now:
+                raise HTTPException(status_code=400, detail="Нельзя бронировать прошедшее время")
+
+            # Добавляем бронирование
+            cur.execute(
+                """
+                INSERT INTO "Booking" ("schedule_id", "user_id", "service_id")
+                VALUES (%s, %s, %s)
+                RETURNING id
+                """,
+                (scheduleId, userId, serviceId)
+            )
+            booking = cur.fetchone()
+
+            # Update the schedule to mark it as unavailable
+            cur.execute(
+                'UPDATE "Schedule" SET "isAvailable" = %s WHERE id = %s',
+                (False, scheduleId)
+            )
+
+            conn.commit()
+            return {"message": "Бронирование успешно", "booking_id": booking["id"]}
+
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
+
+    finally:
+        conn.close()
+@app.get("/user-bookings", response_model=List[int])
+async def get_user_bookings(userId: int, current_user: dict = Depends(get_current_user)):
+    if current_user["id"] != userId:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only access your own bookings"
+        )
+    
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                SELECT schedule_id
+                FROM "Booking"
+                WHERE "user_id" = %s
+                """,
+                (userId,)
+            )
+            bookings = cur.fetchall()
+            # Возвращаем список schedule_id
+            return [booking["schedule_id"] for booking in bookings]
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+    
+
+
+@app.delete("/delete-booking")
+async def delete_booking(
+    userId: int = Form(...),
+    bookingId: int = Form(...),
+    current_user: dict = Depends(get_current_user)
+):
+    if current_user["id"] != userId:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You can only delete your own bookings"
+        )
+
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            # Retrieve the booking to get schedule_id and verify it belongs to the user
+            cur.execute(
+                """
+                SELECT schedule_id
+                FROM "Booking"
+                WHERE id = %s AND user_id = %s
+                """,
+                (bookingId, userId)
+            )
+            booking = cur.fetchone()
+            if not booking:
+                raise HTTPException(status_code=404, detail="Бронирование не найдено или не принадлежит вам")
+
+            # Update the Schedule table to set isAvailable = true
+            cur.execute(
+                'UPDATE "Schedule" SET "isAvailable" = %s WHERE id = %s',
+                (True, booking["schedule_id"])
+            )
+
+            # Delete the booking from the Booking table
+            cur.execute(
+                'DELETE FROM "Booking" WHERE id = %s',
+                (bookingId,)
+            )
+
+            # Verify the deletion
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Бронирование не найдено")
+
+            conn.commit()
+            return {"message": "Бронирование успешно удалено"}
+
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
+    finally:
+        conn.close()
+
 
 # Run both FastAPI and Telegram bot
 async def main():
