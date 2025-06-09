@@ -118,7 +118,7 @@ function Gallery() {
             className={style.closeGridBtn}
             onClick={toggleView}
             aria-label="Свернуть галерею"
-          ></a>
+          >&times;</a>
         )}
       </div>
     </div>

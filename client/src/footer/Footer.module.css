@@ -45,3 +45,24 @@
     right: 30px;
     box-shadow: none;
 }
+.goTop
+{
+    position: fixed;
+    bottom: 150px;
+    width: 70px;
+    height: 70px;
+    font-size: 23px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    background-color: rgb(253, 221, 229);
+    color: white;
+    opacity: 0;
+    transition: 0.2s;
+}
+.showBtn
+{
+    opacity: 1;
+}

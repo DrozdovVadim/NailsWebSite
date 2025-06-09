@@ -35,8 +35,13 @@ function Profile({ onClose }) {
   const handleUploadImage = async (e) => {
     const newFile = e.target.files[0]; 
     setFile(newFile);
-    if (!file || !user?.id) {
+    if (!file ) {
       alert("Выберите файл и убедитесь, что user.id установлен.");
+      return;
+    }
+    else if (!user?.id)
+    {
+      alert("UserID говна")
       return;
     }
 
@@ -51,6 +56,9 @@ function Profile({ onClose }) {
           Authorization: `Bearer ${token}`,
           // Не обязательно указывать Content-Type — axios сам выставит его правильно
         },
+        params: {
+        userId: user.id,
+      },
       });
 
       setProfileImage(`/images/profileImg/${user.id}.jpg?${Date.now()}`);

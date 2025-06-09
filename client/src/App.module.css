@@ -43,9 +43,10 @@ ul
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 80px;
+    /* margin-bottom: 80px; */
     box-sizing: border-box;
     scroll-snap-align: start;
+    padding-top: 100px;
 }
 
 .sectionTitle

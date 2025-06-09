@@ -5,10 +5,28 @@ import logoTg from "../images/TelegramLogo.png"
 import logoVk from "../images/vkLogo.png"
 import logoWa from "../images/whatsappLogo.png"
 import webLogo from "../images/logo.svg"
+import { useEffect } from "react";
+
+
 
 
 function Footer()
 {
+     useEffect(() => {
+    const goTop = () => {
+      const btn = document.querySelector("#goTop");
+      if (btn) {
+        if (window.scrollY > 500) {
+          btn.classList.add(style.showBtn);    
+        } else {
+          btn.classList.remove(style.showBtn);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", goTop);
+
+  }, []);
     return(
         <footer className={generalStyle.section+ " "+ style.footerSection}>
             <div className={generalStyle.container + " "+ style.footerContainer}>
@@ -30,6 +48,9 @@ function Footer()
                 </div>
                 <img className={style.footerLogo} src={webLogo} alt="logo" />
             </div>
+            <a id="goTop" href="#mainSection" className={style.goTop}>
+                &#9650;
+            </a>
         </footer>
     )
 }

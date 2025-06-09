@@ -177,8 +177,8 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @app.post("/upload-profile-image")
 async def upload_profile_image(
+    userId: int,
     file: UploadFile = File(...),
-    userId: str = Form(...),
     current_user: dict = Depends(get_current_user)
 ):
     if current_user["id"]!= userId:
@@ -506,7 +506,33 @@ async def book_slot(
 
     finally:
         conn.close()
-@app.get("/user-bookings", response_model=List[int])
+# @app.get("/user-bookings", response_model=List[int])
+# async def get_user_bookings(userId: int, current_user: dict = Depends(get_current_user)):
+#     if current_user["id"] != userId:
+#         raise HTTPException(
+#             status_code=status.HTTP_403_FORBIDDEN,
+#             detail="You can only access your own bookings"
+#         )
+    
+#     conn = get_db_connection()
+#     try:
+#         with conn.cursor(cursor_factory=RealDictCursor) as cur:
+#             cur.execute(
+#                 """
+#                 SELECT schedule_id
+#                 FROM "Booking"
+#                 WHERE "user_id" = %s
+#                 """,
+#                 (userId,)
+#             )
+#             bookings = cur.fetchall()
+#             # Возвращаем список schedule_id
+#             return [booking["schedule_id"] for booking in bookings]
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+#     finally:
+#         conn.close()
+@app.get("/user-bookings", response_model=List[dict])
 async def get_user_bookings(userId: int, current_user: dict = Depends(get_current_user)):
     if current_user["id"] != userId:
         raise HTTPException(
@@ -519,15 +545,14 @@ async def get_user_bookings(userId: int, current_user: dict = Depends(get_curren
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             cur.execute(
                 """
-                SELECT schedule_id
+                SELECT id, schedule_id
                 FROM "Booking"
                 WHERE "user_id" = %s
                 """,
                 (userId,)
             )
             bookings = cur.fetchall()
-            # Возвращаем список schedule_id
-            return [booking["schedule_id"] for booking in bookings]
+            return bookings  # Возвращает [{id: bookingId, schedule_id: scheduleId}, ...]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:

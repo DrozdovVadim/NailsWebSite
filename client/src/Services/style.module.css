@@ -1,0 +1,185 @@
+.servicesContainer
+{
+    display: flex;
+    flex-direction: column;
+     background: linear-gradient(135deg, #dfb0ff,#ffffff,#ffbde3);    
+}
+.servicesWrapper
+{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.serviceItemsWrapper
+{
+    margin: auto 10px;
+}
+.serviceItem
+{
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    border-bottom: 1px solid rgb(159, 209, 255);;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    position: relative;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.serviceItem::before
+{
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    content: "";
+    background-color: rgb(187, 220, 250);
+    height: 100%;
+    width: 0;
+    transition: 0.6s;
+    border-radius: 14px 14px 0 0;
+}
+.serviceItem p
+{
+    z-index: 3;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.serviceItem:hover::before
+{
+    width: 100%;
+}
+.serviceItem:hover p
+{
+    color:white;
+}
+.serviceItem p:first-child
+{
+    font-size: 24px;
+    text-align: left;
+    padding-left: 15px;
+}
+.serviceItem p
+{
+    font-size: 18px;
+}
+.imgWrapper
+{
+    position: relative;
+    border-radius: 20px;
+    background-color: rgb(198 227 255);
+    box-shadow: 1px 1px 20px rgb(0 0 0 / 42%);
+    width: 650px;
+    height: 650px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.img
+{
+    position: absolute;
+    width: 90%;
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+    border: 15px solid white;
+    box-sizing: border-box;
+    opacity: 0;
+    transition: 0.5s;
+    object-fit: cover;
+}
+.serviceItem:hover .img
+{
+    opacity: 1;
+}
+.img
+{
+    width: 90%;
+    aspect-ratio: 1/1;
+    border-radius: 20px;
+    border: 15px solid white;
+    box-sizing: border-box;
+    opacity: 0;
+    
+}
+.showImg
+{
+    opacity: 1;
+}
+.chageForm
+{
+    position: fixed;
+    top:30%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    max-width: 700px;
+    height: 250px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.312);
+}
+.chageForm h3
+{
+    font-size: 20px;
+    font-weight: 300;
+}
+.formInfo
+{
+    padding-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:20px;
+    margin: auto 0;
+}
+.formInfo p
+{
+    padding: 10px 0;
+}
+.formInfo input 
+{
+    outline: none;
+    border: none;
+    background-color: #e1e2ff;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+.closeForm
+{
+    position: fixed;
+    top:10px;
+    right: 15px;
+    font-size: 25px;
+    cursor: pointer;
+}
+.btnWrapper
+{
+    
+    width: 30%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:10px;
+    margin-top: auto;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: 20px;
+}
+.btnWrapper div
+{
+    padding: 10px 15px;
+    background-color: rgb(4, 211, 4);
+    border-radius: 20px;
+    color:white;
+    cursor: pointer;
+}
+.btnWrapper div:last-child
+{
+    background-color: rgb(255, 62, 62);
+}

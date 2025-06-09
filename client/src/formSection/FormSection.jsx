@@ -25,7 +25,7 @@ const localizer = dateFnsLocalizer({
 });
 
 function FormSection() {
-  const { user, data, isLoading, handleRegister, handleLogin, logout } = useUser();
+  const { user, logout } = useUser();
   const [events, setEvents] = useState([]);
   const [date, setDate] = useState(new Date());
   const [view, setView] = useState(Views.WEEK);
@@ -34,6 +34,7 @@ function FormSection() {
   const [showForm, setShowForm] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [userBookings, setUserBookings] = useState([]);
+  const [bookingIdMap, setBookingIdMap] = useState({});
 
   useEffect(() => {
     // Загрузка расписания
@@ -85,7 +86,27 @@ function FormSection() {
             },
           });
           console.log("Бронирования пользователя:", res.data);
-          setUserBookings(res.data);
+
+          // Если сервер возвращает массив чисел (schedule_id)
+          if (Array.isArray(res.data) && typeof res.data[0] === "number") {
+            setUserBookings(res.data);
+            setBookingIdMap({}); // Нельзя создать mapping без booking_id
+            console.warn("Сервер возвращает только schedule_id. bookingIdMap не будет создан.");
+          } 
+          // Если сервер возвращает массив объектов {id, schedule_id}
+          else if (Array.isArray(res.data) && res.data[0]?.schedule_id) {
+            const bookings = res.data;
+            const newBookingIdMap = {};
+            bookings.forEach((booking) => {
+              newBookingIdMap[booking.schedule_id] = booking.id;
+            });
+            setUserBookings(bookings.map((booking) => booking.schedule_id));
+            setBookingIdMap(newBookingIdMap);
+          } else {
+            console.error("Неверный формат данных от сервера:", res.data);
+            setUserBookings([]);
+            setBookingIdMap({});
+          }
         } catch (err) {
           console.error("Ошибка загрузки бронирований:", err);
           if (err.response?.status === 401) {
@@ -94,6 +115,7 @@ function FormSection() {
           } else if (err.response?.status === 404) {
             console.log("Эндпоинт /user-bookings не найден или userId некорректен");
             setUserBookings([]);
+            setBookingIdMap({});
           } else {
             console.error("Другая ошибка:", err);
           }
@@ -105,7 +127,6 @@ function FormSection() {
     fetchServices();
     fetchUserBookings();
   }, [user, logout]);
-
 
   const cancelBooking = async (scheduleId) => {
     if (!user) {
@@ -172,7 +193,6 @@ function FormSection() {
     }
   };
 
-
   // Обновление заголовков событий при изменении userBookings
   useEffect(() => {
     setEvents((prevEvents) =>
@@ -221,28 +241,29 @@ function FormSection() {
         borderRadius: "4px",
         border: "none",
         display: "block",
-        pointerEvents: isPast ? "none" : "auto",
+        // Allow pointer events for user bookings, even if past
+        pointerEvents: isUserBooking ? "auto" : isPast ? "none" : "auto",
       },
     };
   };
 
   // Функция для открытия формы при двойном клике
-const handleDoubleClick = (event) => {
-  if (!event.isAvailable) {
-    if (userBookings.includes(event.id)) {
-      // Allow canceling user's own booking
-      const confirmCancel = window.confirm("Хотите отменить эту запись?");
-      if (confirmCancel) {
-        cancelBooking(event.id);
+  const handleDoubleClick = (event) => {
+    if (!event.isAvailable) {
+      if (userBookings.includes(event.id)) {
+        // Allow canceling user's own booking
+        const confirmCancel = window.confirm("Хотите отменить эту запись?");
+        if (confirmCancel) {
+          cancelBooking(event.id);
+        }
+      } else {
+        alert("Этот слот уже занят и не доступен для записи.");
       }
-    } else {
-      alert("Этот слот уже занят и не доступен для записи.");
+      return;
     }
-    return;
-  }
-  setSelectedSlot(event);
-  setShowForm(true);
-};
+    setSelectedSlot(event);
+    setShowForm(true);
+  };
 
   // Функция для записи на слот
   const bookSlot = async () => {
@@ -291,6 +312,12 @@ const handleDoubleClick = (event) => {
       // Обновляем бронирования пользователя
       setUserBookings((prev) => [...prev, selectedSlot.id]);
 
+      // Обновляем bookingIdMap с новым booking_id из ответа сервера
+      setBookingIdMap((prev) => ({
+        ...prev,
+        [selectedSlot.id]: response.data.booking_id,
+      }));
+
       setShowForm(false);
       alert("Вы успешно записались!");
       console.log("Ответ сервера:", response.data);
@@ -307,6 +334,37 @@ const handleDoubleClick = (event) => {
         alert("Не удалось записаться. Попробуйте снова.");
       }
     }
+  };
+
+  // Кастомный компонент для рендеринга событий
+  const EventComponent = ({ event }) => {
+    const isUserBooking = userBookings.includes(event.id);
+    return (
+      <div>
+        <span>{event.title}</span>
+        {isUserBooking && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // Предотвращаем срабатывание других событий
+              cancelBooking(event.id);
+            }}
+            style={{
+              marginLeft: "5px",
+              fontSize: "12px",
+              padding: "2px 5px",
+              backgroundColor: "red",
+              color: "white",
+              border: "none",
+              borderRadius: "3px",
+              cursor: "pointer",
+              pointerEvents: "auto", // Ensure button is clickable
+            }}
+          >
+            Удалить
+          </button>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -383,9 +441,13 @@ const handleDoubleClick = (event) => {
           tooltipAccessor={null}
           onDoubleClickEvent={handleDoubleClick}
           eventPropGetter={eventStyleGetter}
+          components={{
+            event: EventComponent,
+          }}
         />
       </div>
     </div>
   );
 }
+
 export default FormSection;

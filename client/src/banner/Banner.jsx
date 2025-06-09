@@ -5,7 +5,7 @@ import nails from "../images/bannerImg.jpg";
 
 function Banner() {
   return (
-    <div className={generalStyle.section +" "+style.bannerSection}>
+    <section id="mainSection" className={generalStyle.section +" "+style.bannerSection}>
       
       <div className={generalStyle.container + " " + style.bannerContainer}>
       
@@ -26,7 +26,7 @@ function Banner() {
         </div>
         <img src={nails} alt="nailPhoto" />
       </div>
-    </div>
+    </section>
   );
 }
 export default Banner;

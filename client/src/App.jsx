@@ -11,6 +11,7 @@ import '@syncfusion/ej2-base/styles/material.css';
 import '@syncfusion/ej2-react-schedule/styles/material.css';
 
 import { UserProvider } from './context/UserContext';
+import Services from './Services/Services';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Header />
         <Banner />
         <Gallery />
+        <Services/>
         <FormSection />
         <AboutMe />
         <Contacts />
