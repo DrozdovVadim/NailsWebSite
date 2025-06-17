@@ -12,6 +12,8 @@
 }
 .serviceItemsWrapper
 {
+    max-height: 600px;
+    overflow-y: scroll;
     margin: auto 10px;
 }
 .serviceItem
@@ -26,6 +28,9 @@
     position: relative;
     cursor: pointer;
     transition: 0.5s;
+    margin-right: 5px;
+    align-items: center;
+    justify-content: center;
 }
 
 .serviceItem::before
@@ -46,6 +51,7 @@
     z-index: 3;
     cursor: pointer;
     transition: 0.3s;
+    height: fit-content;
 }
 .serviceItem:hover::before
 {
@@ -57,7 +63,7 @@
 }
 .serviceItem p:first-child
 {
-    font-size: 24px;
+    font-size: 18px;
     text-align: left;
     padding-left: 15px;
 }
@@ -87,7 +93,7 @@
     border: 15px solid white;
     box-sizing: border-box;
     opacity: 0;
-    transition: 0.5s;
+    transition: 0.7s;
     object-fit: cover;
 }
 .serviceItem:hover .img

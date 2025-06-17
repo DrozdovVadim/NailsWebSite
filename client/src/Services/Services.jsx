@@ -1,13 +1,14 @@
 import style from "./style.module.css"
 import generalStyle from "../App.module.css";
-import { useState } from "react";
-
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useUser } from "../context/UserContext";
 
 const images = import.meta.glob("../images/services/*.{jpg,jpeg,png,gif}", {
   eager: true,
   import: "default",
-});
+})
+
 
 
 
@@ -16,45 +17,6 @@ const imgData = Object.keys(images).map((path, index) => ({
   src: images[path],
 }));
 
-
-const data=[
-    {
-        id: 1,
-        name: "Услуга 1",
-        price: 1300,
-        duration: "1.5",
-    },
-    {
-        id: 2,
-        name: "Услуга 2",
-        price: 1300,
-        duration: "1.5",
-    },
-    {
-        id: 3,
-        name: "Услуга 3",
-        price: 1300,
-        duration: "1.5",
-    },
-    {
-        id: 4,
-        name: "Услуга 4",
-        price: 1300,
-        duration: "1.5",
-    },
-    {
-        id: 5,
-        name: "Услуга 5",
-        price: 1300,
-        duration: "1.5",
-    },
-    {
-        id: 6,
-        name: "Услуга 6",
-        price: 1300,
-        duration: "1.5",
-    }
-]
 
 const showImg = (id) => {
   const image = document.querySelector(`#image_${id}`);
@@ -65,34 +27,37 @@ const showImg = (id) => {
   }
 };
 
-
-
 const closeImg = (id) =>
 {
     const image = document.querySelector(`#image_${id}`);
     image.classList.remove(style.showImg);
 }
 
-
-const showform = (id, name, price, duration) =>
-{
-    return(
-        <div className={style.chageForm}>
-            <div>&times;</div>
-            <p>{id}</p>
-            <textarea value={name}></textarea>
-            <textarea value={price}></textarea>
-            <textarea value={duration}></textarea>
-            <div>Сохранить</div>
-            <div>Удалить</div>
-        </div>
-    )
-}
-
 function Services()
 {
+    const { user } = useUser();
+    const userRole= user ? user.Role : false;
     const [formData, setFormData] = useState(null);
+    const [serviceData, serServiceData]=useState([]);
 
+    useEffect(()=>
+    {
+      const getServises= async () =>
+      {
+            try
+            {
+              const res= await axios.get("http://localhost:8000/services")
+              serServiceData(res.data)
+              console.log("Данные с сервера(комп. Услуги)", res.data)
+            }
+            catch(err)
+            {
+              console.log(err)
+            }
+        
+      }
+      getServises();
+    },[])
     const handleClick = (item) => {
         setFormData(item);
     };
@@ -104,7 +69,7 @@ function Services()
         <h2 className={generalStyle.sectionTitle}>Мои услуги</h2>
         <div className={style.servicesWrapper}>
           <div className={style.serviceItemsWrapper}>
-            {data.map((item) => (
+            {serviceData.map((item) => (
               <div
                 key={item.id}
                 className={style.serviceItem}
@@ -115,7 +80,7 @@ function Services()
               >
                 <p>{item.name}</p>
                 <p>{item.price} рублей</p>
-                <p>{item.duration} ч.</p>
+                <p>{item.duration} мин.</p>
               </div>
             ))}
           </div>
@@ -127,8 +92,7 @@ function Services()
           </div>
         </div>
 
-        {/* 👇 Форма появляется при выборе item */}
-        {formData && (
+        {userRole && formData  && (
           <div className={style.chageForm}>
             <h3>Изменение объекта</h3>
             <div className={style.closeForm} onClick={closeForm}>&times;</div>
