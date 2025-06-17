@@ -130,6 +130,7 @@
     display: flex;
     flex-direction: column;
     border: 1px solid rgba(0, 0, 0, 0.312);
+    width: 100%;
 }
 .chageForm h3
 {
@@ -143,6 +144,15 @@
     grid-template-columns: repeat(4, 1fr);
     gap:20px;
     margin: auto 0;
+}
+.formAddService
+{
+    padding-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:20px;
+    margin: auto 0;
+    
 }
 .formInfo p
 {
@@ -188,4 +198,82 @@
 .btnWrapper div:last-child
 {
     background-color: rgb(255, 62, 62);
+}
+.addBtn
+{
+    padding: 10px 20px;
+    background-color: rgb(4, 211, 4);
+    border-radius: 14px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: 10px;
+    color: white;
+    transform: 0.3s ;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+.addBtn:hover
+{
+    border: 1px green solid;
+}
+@media (max-width: 1400px)
+{
+    .servicesWrapper
+    {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+    .imgWrapper
+    {
+        width: 400px;
+        height: 400px;
+    }
+    .serviceItemsWrapper
+    {
+        max-height: 400px;
+    }
+}
+@media (max-width: 800px)
+{
+    .chageForm
+    {
+        width: 80%;
+        height: auto;
+        gap: 20px;
+    }
+    .formInfo
+    {
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+    }
+    .btnWrapper
+    {
+        width: auto;
+    }
+}
+@media (max-width: 500px)
+{
+        .imgWrapper
+    {
+        display: none;
+    }
+    .serviceItemsWrapper p
+    {
+        font-size: 14px !important;
+    }
+}
+@media (max-width: 380px)
+{
+        .serviceItemsWrapper p
+    {
+        font-size: 12px !important;
+    }
+    .chageForm
+    {
+        width: 60%;
+
+    }
 }

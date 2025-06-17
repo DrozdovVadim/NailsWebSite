@@ -35,6 +35,25 @@ function FormSection() {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [userBookings, setUserBookings] = useState([]);
   const [bookingIdMap, setBookingIdMap] = useState({});
+  const [allowedViews, setAllowedViews] = useState([Views.WEEK]);
+
+useEffect(() => {
+  const handleResize = () => {
+    if (window.innerWidth < 850) {
+      setView(Views.DAY);
+      setAllowedViews([Views.DAY]);
+      console.log('850px')
+    } else {
+      setView(Views.WEEK);
+      setAllowedViews([Views.DAY, Views.WEEK, Views.MONTH]);
+    }
+  };
+
+  handleResize(); // запуск при монтировании
+  window.addEventListener("resize", handleResize);
+
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   useEffect(() => {
     // Загрузка расписания
@@ -413,38 +432,39 @@ function FormSection() {
           </div>
         )}
         <Calendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: 400 }}
-          date={date}
-          onNavigate={(newDate) => setDate(newDate)}
-          view={view}
-          onView={(newView) => setView(newView)}
-          views={[Views.DAY, Views.WEEK, Views.MONTH]}
-          min={new Date(2025, 0, 1, 10, 0)}
-          max={new Date(2025, 0, 1, 21, 0)}
-          messages={{
-            next: "Следующий",
-            previous: "Предыдущий",
-            today: "Сегодня",
-            month: "Месяц",
-            week: "Неделя",
-            day: "День",
-            agenda: "Повестка",
-            date: "Дата",
-            time: "Время",
-            event: "Событие",
-            allDay: "Весь день",
-          }}
-          tooltipAccessor={null}
-          onDoubleClickEvent={handleDoubleClick}
-          eventPropGetter={eventStyleGetter}
-          components={{
-            event: EventComponent,
-          }}
-        />
+    localizer={localizer}
+    events={events}
+    startAccessor="start"
+    endAccessor="end"
+    style={{ height: 400, minWidth: '100%' }}
+    className={style.calendar}
+    date={date}
+    onNavigate={(newDate) => setDate(newDate)}
+    view={view}
+    onView={setView}
+    views={allowedViews}
+    min={new Date(2025, 0, 1, 10, 0)}
+    max={new Date(2025, 0, 1, 21, 0)}
+    messages={{
+      next: "Следующий",
+      previous: "Предыдущий",
+      today: "Сегодня",
+      month: "Месяц",
+      week: "Неделя",
+      day: "День",
+      agenda: "Повестка",
+      date: "Дата",
+      time: "Время",
+      event: "Событие",
+      allDay: "Весь день",
+    }}
+    tooltipAccessor={null}
+    onDoubleClickEvent={handleDoubleClick}
+    eventPropGetter={eventStyleGetter}
+    components={{
+      event: EventComponent,
+    }}
+  />
       </div>
     </div>
   );

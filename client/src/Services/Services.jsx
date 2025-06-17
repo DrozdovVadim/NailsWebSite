@@ -39,6 +39,7 @@ function Services()
     const userRole= user ? user.Role : false;
     const [formData, setFormData] = useState(null);
     const [serviceData, serServiceData]=useState([]);
+    const [addService, setAddService] = useState(false);
 
     useEffect(()=>
     {
@@ -60,7 +61,17 @@ function Services()
     },[])
     const handleClick = (item) => {
         setFormData(item);
+        setAddService(false);
     };
+    const addServiceFun = () =>
+    {
+      setAddService(true);
+      setFormData(null)
+    };
+    const closeAddService = () =>
+    {
+      setAddService(false);
+    }
     const closeForm = () => setFormData(null);
 
      return (
@@ -69,6 +80,9 @@ function Services()
         <h2 className={generalStyle.sectionTitle}>Мои услуги</h2>
         <div className={style.servicesWrapper}>
           <div className={style.serviceItemsWrapper}>
+            {userRole && (
+              <div onClick={addServiceFun} className={style.addBtn}>Добавить</div>
+            )}
             {serviceData.map((item) => (
               <div
                 key={item.id}
@@ -83,6 +97,7 @@ function Services()
                 <p>{item.duration} мин.</p>
               </div>
             ))}
+            
           </div>
 
           <div className={style.imgWrapper}>
@@ -94,7 +109,7 @@ function Services()
 
         {userRole && formData  && (
           <div className={style.chageForm}>
-            <h3>Изменение объекта</h3>
+            <h3>Измененить услугу</h3>
             <div className={style.closeForm} onClick={closeForm}>&times;</div>
             <div className={style.formInfo}>
                 <p>id- {formData.id}</p>
@@ -105,6 +120,23 @@ function Services()
             <div className={style.btnWrapper}>
                 <div>Сохранить</div>
                 <div>Удалить</div>
+            </div>
+
+          </div>
+        )}
+        {userRole && addService &&(
+          <div className={style.chageForm}>
+            <h3>Добавить услугу</h3>
+            <div className={style.closeForm} onClick={closeAddService}>&times;</div>
+            <div className={style.formInfo+" "+style.formAddService}>
+                <input placeholder="Название услуги" />
+                <input placeholder="Цена" />
+                <input placeholder="Время (в мин)" />
+                <input placeholder="фото" type="file" />
+            </div>
+            <div className={style.btnWrapper}>
+                <div>Сохранить</div>
+                <div onClick={closeAddService}>Закрыть</div>
             </div>
 
           </div>
