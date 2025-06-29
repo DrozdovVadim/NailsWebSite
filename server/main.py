@@ -73,6 +73,11 @@ class ServiceRes(BaseModel):
     name: str
     price: float
     duration: float
+class AddServiceRes(BaseModel):
+    id: int
+    name: str
+    price: float
+    duration: str
 class UpdateScheduleRequest(BaseModel):
     is_available: bool
 class ServiceResponse(BaseModel):
@@ -93,7 +98,17 @@ class ScheduleResponse(BaseModel):
 
     class Config:
         orm_mode = False
-
+class Comment(BaseModel):
+    id: int
+    user: int
+    service: int
+    raiting: int
+    text: str
+class CommentCreate(BaseModel):
+    user_id: int
+    service_id: int
+    raiting: int
+    text: str
 # Helper Functions
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
@@ -506,32 +521,6 @@ async def book_slot(
 
     finally:
         conn.close()
-# @app.get("/user-bookings", response_model=List[int])
-# async def get_user_bookings(userId: int, current_user: dict = Depends(get_current_user)):
-#     if current_user["id"] != userId:
-#         raise HTTPException(
-#             status_code=status.HTTP_403_FORBIDDEN,
-#             detail="You can only access your own bookings"
-#         )
-    
-#     conn = get_db_connection()
-#     try:
-#         with conn.cursor(cursor_factory=RealDictCursor) as cur:
-#             cur.execute(
-#                 """
-#                 SELECT schedule_id
-#                 FROM "Booking"
-#                 WHERE "user_id" = %s
-#                 """,
-#                 (userId,)
-#             )
-#             bookings = cur.fetchall()
-#             # Возвращаем список schedule_id
-#             return [booking["schedule_id"] for booking in bookings]
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-#     finally:
-#         conn.close()
 @app.get("/user-bookings", response_model=List[dict])
 async def get_user_bookings(userId: int, current_user: dict = Depends(get_current_user)):
     if current_user["id"] != userId:
@@ -613,6 +602,176 @@ async def delete_booking(
     finally:
         conn.close()
 
+
+
+
+SERVICE_DIR =  "../client/src/images/services"
+os.makedirs(SERVICE_DIR, exist_ok=True)
+
+
+@app.post("/addService")
+async def add_service(
+    name: str = Form(...),
+    price: str = Form(...),
+    duration: str = Form(...),
+    photo: UploadFile = File(...)
+):
+    conn = get_db_connection()
+    try:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute(
+                """
+                INSERT INTO "Service" ("Name", "Price", "Duration")
+                VALUES (%s, %s, %s)
+                Returning "id"
+                """, (name, price, duration)
+            )
+            service_id = cur.fetchone()["id"]
+            conn.commit()
+        
+        # Сохраняем файл
+        filename = "image_"+f"{service_id}.jpg"
+        file_path = os.path.join(SERVICE_DIR, filename)
+
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(photo.file, buffer)
+
+        return {"message": "Услуга добавлена", "id": service_id}
+    
+    except Exception as e:
+        conn.rollback()
+        import traceback
+        traceback.print_exc()  # ⬅️ Это покажет полную ошибку в терминале
+        raise HTTPException(status_code=500, detail=f"Ошибка сервера: {str(e)}")
+
+    
+    finally:
+        conn.close()
+
+
+
+@app.post("/saveService")
+async def save_service(s: AddServiceRes):
+    conn = get_db_connection()
+    try:
+        print("📥 Получены данные от клиента:")
+        print("ID:", s.id)
+        print("Name:", s.name)
+        print("Price:", s.price)
+        print("Duration:", s.duration)
+
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            # Проверим, существует ли запись
+            cur.execute("""SELECT * FROM "Service" WHERE id = %s;""", (s.id,))
+            service = cur.fetchone()
+            if not service:
+                print(f"⚠️ Услуга с id {s.id} не найдена.")
+                raise HTTPException(status_code=404, detail="Service not found")
+
+            print("🔧 До обновления:", service)
+
+            cur.execute(
+                """
+                UPDATE "Service"
+                SET "Name" = %s, "Price" = %s, "Duration" = %s
+                WHERE id = %s;
+                """,
+                (s.name, s.price, s.duration, s.id)
+            )
+
+            if cur.rowcount == 0:
+                print("⚠️ UPDATE не затронул ни одной строки.")
+                raise HTTPException(status_code=400, detail="Update failed")
+
+            conn.commit()
+
+            # Проверим, как теперь выглядит запись
+            cur.execute("""SELECT * FROM "Service" WHERE id = %s;""", (s.id,))
+            updated_service = cur.fetchone()
+            print("✅ После обновления:", updated_service)
+
+            return {"message": "Service updated successfully", "service": updated_service}
+
+    except Exception as e:
+        print("❌ Ошибка при сохранении:", e)
+        raise HTTPException(status_code=500, detail="Internal server error")
+    finally:
+        conn.close()
+@app.delete("/deleteService/{service_id}")
+async def delete_service(service_id: int):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                'DELETE FROM "Service" WHERE id = %s;',
+                (service_id,)
+            )
+            if cur.rowcount == 0:
+                raise HTTPException(status_code=404, detail="Service not found")
+            conn.commit()
+            return {"message": "Service deleted successfully"}
+    finally:
+        conn.close()
+@app.get("/getComments")
+async def get_comments():
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                '''
+                SELECT 
+                    "Comments".id, 
+                    "Comments".service_id, 
+                    "Comments".user_id, 
+                    "Comments".raiting, 
+                    "Comments".text,
+                    "Service"."Name" AS service_name,
+                    "User"."FullName" AS user_name
+                FROM "Comments"
+                JOIN "Service" ON "Comments".service_id = "Service".id
+                JOIN "User" ON "Comments".user_id = "User".id
+                '''
+            )
+            rows = cur.fetchall()
+
+            # Преобразование в словари (если нужно)
+            comments = [
+                {
+                    "id": row[0],
+                    "service_id": row[1],
+                    "user_id": row[2],
+                    "raiting": row[3],
+                    "text": row[4],
+                    "service_name": row[5],
+                    "user_name": row[6]
+                }
+                for row in rows
+            ]
+            print(comments)
+            return comments
+    finally:
+        conn.close()
+@app.post("/saveComment")
+async def save_comment(comment: CommentCreate):
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                '''
+                INSERT INTO "Comments" (user_id, service_id, raiting, text)
+                VALUES (%s, %s, %s, %s)
+                RETURNING id
+                ''',
+                (comment.user_id, comment.service_id, comment.raiting, comment.text)
+            )
+            comment_id = cur.fetchone()[0]
+            conn.commit()
+            return {"message": "Комментарий успешно сохранён", "comment_id": comment_id}
+    except Exception as e:
+        conn.rollback()
+        raise HTTPException(status_code=500, detail=f"Ошибка при сохранении комментария: {str(e)}")
+    finally:
+        conn.close()
 
 # Run both FastAPI and Telegram bot
 async def main():

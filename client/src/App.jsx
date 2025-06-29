@@ -12,6 +12,7 @@ import '@syncfusion/ej2-react-schedule/styles/material.css';
 
 import { UserProvider } from './context/UserContext';
 import Services from './Services/Services';
+import Comments from './comments/Comments';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
         <AboutMe />
         <Contacts />
         <Map />
+        <Comments/>
         <Footer />
       </div>
     </UserProvider>

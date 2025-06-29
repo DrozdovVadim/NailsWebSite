@@ -1,0 +1,145 @@
+
+.container
+{
+        background: linear-gradient(135deg, #b0feff,#E2E2E2,#b0feff);  
+        position: relative;
+}
+.commentsWrapper
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 450px;
+    padding: 20px;
+}
+.commentItem
+{
+    width: 350px !important;
+    /* background-color: rgb(198 227 255); */
+    background-color: rgb(255, 201, 198);
+    box-shadow: 1px 1px 10px 5px rgba(0, 0, 0, 0.188);
+    border-radius: 20px;
+    box-sizing: border-box;
+    border: 8px solid white;
+    display: grid;
+    padding: 30px;
+    height: 400px;
+    grid-template-areas: 
+    "avatar avatar avatar name"
+    "avatar avatar avatar sevrice"
+    "avatar avatar avatar raiting"
+    "comment comment comment comment";
+}
+
+.swiper-wrapper
+{
+    align-items: center !important;
+}
+.commentItemText
+{
+    grid-area: comment;
+    padding: 20px;
+    background-color: white;
+    width: 80%;
+    margin: 0 auto;
+    border-radius: 20px;
+    height: 120px;
+    overflow-y: scroll;
+    margin-top: 30px;
+    box-shadow: 1px 1px 10px 1px #00000085;
+}
+.commentAvatar
+{
+    grid-area: avatar;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    border: white solid 2px;
+    object-fit: cover;
+}
+.autorId
+{
+    grid-area: name;
+}
+.ServiceId
+{
+    margin-top: -20px;
+    grid-area: sevrice;
+}
+.raiting
+{
+    margin-top: -30px;
+    width: 110px;
+    grid-area: raiting;
+    padding: 7px 3px;
+    background-color: white;
+    height: fit-content;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.addCommentBtn
+{
+    padding: 10px 15px;
+    border-radius: 20px;
+    background-color: rgb(4, 211, 4);
+    cursor: pointer;
+    color: white;
+    margin-left: auto;
+}
+.commentForm
+{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    padding: 40px;
+    padding-top: 20px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    width: 500px;
+    z-index: 3;
+    top:50%;
+    left: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    gap: 25px;
+    filter: drop-shadow(6px 3px 11px #0000008a);
+}
+.commentForm *
+{
+    width: 60%;
+    text-align: center;
+}
+.commentForm h3
+{
+    font-size: 20px;
+}
+.formRaiting, .formService
+{
+    margin-left: 10px;
+    padding-left: 15px;
+    width: 40%;
+}
+.formText
+{
+    text-align: left;
+    padding-left: 15px;
+    padding-bottom: 110px;
+    padding-top: 20px;
+}
+.formBtn
+{
+    font-size: 16px;
+        width: 40%;
+}
+.closeBtn
+{
+    position: fixed;
+    top:15px;
+    right: 25px;
+    width: fit-content;
+    cursor: pointer;
+}
